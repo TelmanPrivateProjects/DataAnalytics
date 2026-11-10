@@ -3,7 +3,7 @@
 <html lang="en">
 <head><meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Assigment_01_2020453</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>02 - Online Bookstore Analysis</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <style type="text/css">
     pre { line-height: 125%; }
 td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
@@ -7332,7 +7332,12 @@ a.anchor-link {
     if (!diagrams.length) {
       return;
     }
-    const mermaid = (await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.7.0/mermaid.esm.min.mjs")).default;
+    const mermaid = (await import("https://cdnjs.cloudflare.com/ajax/libs/mermaid/11.10.0/mermaid.esm.min.mjs")).default;
+    const elkUrl = "https://cdnjs.cloudflare.com/ajax/libs/mermaid-layout-elk/0.1.9/mermaid-layout-elk.esm.min.mjs";
+    if(elkUrl) {
+      const elkLayouts = (await import(elkUrl)).default;
+      mermaid.registerLayoutLoaders(elkLayouts);
+    }
     const parser = new DOMParser();
 
     mermaid.initialize({
@@ -7429,7 +7434,8 @@ a.anchor-link {
      * Post-process to ensure mermaid diagrams contain only valid SVG and XHTML.
      */
     function cleanMermaidSvg(svg) {
-      return svg.replace(RE_VOID_ELEMENT, replaceVoidElement);
+      svg = svg.replace(RE_VOID_ELEMENT, replaceVoidElement);
+      return `${SVG_XML_HEADER}${svg}`;
     }
 
 
@@ -7455,6 +7461,285 @@ a.anchor-link {
       }
       return `<${tag} ${rest}>`;
     }
+
+
+  /**
+   * Named HTML entities with their decimal equivalent codes.
+   *
+   * @see https://www.w3.org/TR/WD-html40-970708/sgml/entities.html
+   * */
+  const HTML_ENTITIES = `<!ENTITY Aacute "&#193;">
+<!ENTITY aacute "&#225;">
+<!ENTITY Acirc "&#194;">
+<!ENTITY acirc "&#226;">
+<!ENTITY acute "&#180;">
+<!ENTITY AElig "&#198;">
+<!ENTITY aelig "&#230;">
+<!ENTITY Agrave "&#192;">
+<!ENTITY agrave "&#224;">
+<!ENTITY alefsym "&#8501;">
+<!ENTITY Alpha "&#913;">
+<!ENTITY alpha "&#945;">
+<!ENTITY amp "&#38;">
+<!ENTITY and "&#8869;">
+<!ENTITY ang "&#8736;">
+<!ENTITY Aring "&#197;">
+<!ENTITY aring "&#229;">
+<!ENTITY asymp "&#8776;">
+<!ENTITY Atilde "&#195;">
+<!ENTITY atilde "&#227;">
+<!ENTITY Auml "&#196;">
+<!ENTITY auml "&#228;">
+<!ENTITY bdquo "&#8222;">
+<!ENTITY Beta "&#914;">
+<!ENTITY beta "&#946;">
+<!ENTITY brvbar "&#166;">
+<!ENTITY bull "&#8226;">
+<!ENTITY cap "&#8745;">
+<!ENTITY Ccedil "&#199;">
+<!ENTITY ccedil "&#231;">
+<!ENTITY cedil "&#184;">
+<!ENTITY cent "&#162;">
+<!ENTITY Chi "&#935;">
+<!ENTITY chi "&#967;">
+<!ENTITY circ "&#710;">
+<!ENTITY clubs "&#9827;">
+<!ENTITY cong "&#8773;">
+<!ENTITY copy "&#169;">
+<!ENTITY crarr "&#8629;">
+<!ENTITY cup "&#8746;">
+<!ENTITY curren "&#164;">
+<!ENTITY dagger "&#8224;">
+<!ENTITY Dagger "&#8225;">
+<!ENTITY darr "&#8595;">
+<!ENTITY dArr "&#8659;">
+<!ENTITY deg "&#176;">
+<!ENTITY Delta "&#916;">
+<!ENTITY delta "&#948;">
+<!ENTITY diams "&#9830;">
+<!ENTITY divide "&#247;">
+<!ENTITY Eacute "&#201;">
+<!ENTITY eacute "&#233;">
+<!ENTITY Ecirc "&#202;">
+<!ENTITY ecirc "&#234;">
+<!ENTITY Egrave "&#200;">
+<!ENTITY egrave "&#232;">
+<!ENTITY empty "&#8709;">
+<!ENTITY emsp "&#8195;">
+<!ENTITY ensp "&#8194;">
+<!ENTITY epsilon "&#949;">
+<!ENTITY Epsilon "&#917;">
+<!ENTITY equiv "&#8801;">
+<!ENTITY Eta "&#919;">
+<!ENTITY eta "&#951;">
+<!ENTITY ETH "&#208;">
+<!ENTITY eth "&#240;">
+<!ENTITY Euml "&#203;">
+<!ENTITY euml "&#235;">
+<!ENTITY exist "&#8707;">
+<!ENTITY fnof "&#402;">
+<!ENTITY forall "&#8704;">
+<!ENTITY frac12 "&#189;">
+<!ENTITY frac14 "&#188;">
+<!ENTITY frac34 "&#190;">
+<!ENTITY frasl "&#8260;">
+<!ENTITY Gamma "&#915;">
+<!ENTITY gamma "&#947;">
+<!ENTITY ge "&#8805;">
+<!ENTITY gt "&#62;">
+<!ENTITY harr "&#8596;">
+<!ENTITY hArr "&#8660;">
+<!ENTITY hearts "&#9829;">
+<!ENTITY hellip "&#8230;">
+<!ENTITY Iacute "&#205;">
+<!ENTITY iacute "&#237;">
+<!ENTITY Icirc "&#206;">
+<!ENTITY icirc "&#238;">
+<!ENTITY iexcl "&#161;">
+<!ENTITY Igrave "&#204;">
+<!ENTITY igrave "&#236;">
+<!ENTITY image "&#8465;">
+<!ENTITY infin "&#8734;">
+<!ENTITY int "&#8747;">
+<!ENTITY Iota "&#921;">
+<!ENTITY iota "&#953;">
+<!ENTITY iquest "&#191;">
+<!ENTITY isin "&#8712;">
+<!ENTITY Iuml "&#207;">
+<!ENTITY iuml "&#239;">
+<!ENTITY Kappa "&#922;">
+<!ENTITY kappa "&#954;">
+<!ENTITY Lambda "&#923;">
+<!ENTITY lambda "&#955;">
+<!ENTITY lang "&#9001;">
+<!ENTITY laquo "&#171;">
+<!ENTITY larr "&#8592;">
+<!ENTITY lArr "&#8656;">
+<!ENTITY lceil "&#8968;">
+<!ENTITY ldquo "&#8220;">
+<!ENTITY le "&#8804;">
+<!ENTITY lfloor "&#8970;">
+<!ENTITY lowast "&#8727;">
+<!ENTITY loz "&#9674;">
+<!ENTITY lrm "&#8206;">
+<!ENTITY lsaquo "&#8249;">
+<!ENTITY lsquo "&#8216;">
+<!ENTITY lt "&#60;">
+<!ENTITY macr "&#175;">
+<!ENTITY mdash "&#8212;">
+<!ENTITY micro "&#181;">
+<!ENTITY middot "&#183;">
+<!ENTITY minus "&#8722;">
+<!ENTITY Mu "&#924;">
+<!ENTITY mu "&#956;">
+<!ENTITY nabla "&#8711;">
+<!ENTITY nbsp "&#160;">
+<!ENTITY ndash "&#8211;">
+<!ENTITY ne "&#8800;">
+<!ENTITY ni "&#8715;">
+<!ENTITY not "&#172;">
+<!ENTITY notin "&#8713;">
+<!ENTITY nsub "&#8836;">
+<!ENTITY Ntilde "&#209;">
+<!ENTITY ntilde "&#241;">
+<!ENTITY Nu "&#925;">
+<!ENTITY nu "&#957;">
+<!ENTITY Oacute "&#211;">
+<!ENTITY oacute "&#243;">
+<!ENTITY Ocirc "&#212;">
+<!ENTITY ocirc "&#244;">
+<!ENTITY OElig "&#338;">
+<!ENTITY oelig "&#339;">
+<!ENTITY Ograve "&#210;">
+<!ENTITY ograve "&#242;">
+<!ENTITY oline "&#8254;">
+<!ENTITY Omega "&#937;">
+<!ENTITY omega "&#969;">
+<!ENTITY Omicron "&#927;">
+<!ENTITY omicron "&#959;">
+<!ENTITY oplus "&#8853;">
+<!ENTITY or "&#8870;">
+<!ENTITY ordf "&#170;">
+<!ENTITY ordm "&#186;">
+<!ENTITY Oslash "&#216;">
+<!ENTITY oslash "&#248;">
+<!ENTITY Otilde "&#213;">
+<!ENTITY otilde "&#245;">
+<!ENTITY otimes "&#8855;">
+<!ENTITY Ouml "&#214;">
+<!ENTITY ouml "&#246;">
+<!ENTITY para "&#182;">
+<!ENTITY part "&#8706;">
+<!ENTITY permil "&#8240;">
+<!ENTITY perp "&#8869;">
+<!ENTITY Phi "&#934;">
+<!ENTITY phi "&#966;">
+<!ENTITY Pi "&#928;">
+<!ENTITY pi "&#960;">
+<!ENTITY piv "&#982;">
+<!ENTITY plusmn "&#177;">
+<!ENTITY pound "&#163;">
+<!ENTITY prime "&#8242;">
+<!ENTITY Prime "&#8243;">
+<!ENTITY prod "&#8719;">
+<!ENTITY prop "&#8733;">
+<!ENTITY Psi "&#936;">
+<!ENTITY psi "&#968;">
+<!ENTITY quot "&#34;">
+<!ENTITY radic "&#8730;">
+<!ENTITY rang "&#9002;">
+<!ENTITY raquo "&#187;">
+<!ENTITY rarr "&#8594;">
+<!ENTITY rArr "&#8658;">
+<!ENTITY rceil "&#8969;">
+<!ENTITY rdquo "&#8221;">
+<!ENTITY real "&#8476;">
+<!ENTITY reg "&#174;">
+<!ENTITY rfloor "&#8971;">
+<!ENTITY Rho "&#929;">
+<!ENTITY rho "&#961;">
+<!ENTITY rlm "&#8207;">
+<!ENTITY rsaquo "&#8250;">
+<!ENTITY rsquo "&#8217;">
+<!ENTITY sbquo "&#8218;">
+<!ENTITY Scaron "&#352;">
+<!ENTITY scaron "&#353;">
+<!ENTITY sdot "&#8901;">
+<!ENTITY sect "&#167;">
+<!ENTITY shy "&#173;">
+<!ENTITY Sigma "&#931;">
+<!ENTITY sigma "&#963;">
+<!ENTITY sigmaf "&#962;">
+<!ENTITY sim "&#8764;">
+<!ENTITY spades "&#9824;">
+<!ENTITY sub "&#8834;">
+<!ENTITY sube "&#8838;">
+<!ENTITY sum "&#8721;">
+<!ENTITY sup "&#8835;">
+<!ENTITY sup1 "&#185;">
+<!ENTITY sup2 "&#178;">
+<!ENTITY sup3 "&#179;">
+<!ENTITY supe "&#8839;">
+<!ENTITY szlig "&#223;">
+<!ENTITY Tau "&#932;">
+<!ENTITY tau "&#964;">
+<!ENTITY there4 "&#8756;">
+<!ENTITY Theta "&#920;">
+<!ENTITY theta "&#952;">
+<!ENTITY thetasym "&#977;">
+<!ENTITY thinsp "&#8201;">
+<!ENTITY THORN "&#222;">
+<!ENTITY thorn "&#254;">
+<!ENTITY tilde "&#732;">
+<!ENTITY times "&#215;">
+<!ENTITY trade "&#8482;">
+<!ENTITY Uacute "&#218;">
+<!ENTITY uacute "&#250;">
+<!ENTITY uarr "&#8593;">
+<!ENTITY uArr "&#8657;">
+<!ENTITY Ucirc "&#219;">
+<!ENTITY ucirc "&#251;">
+<!ENTITY Ugrave "&#217;">
+<!ENTITY ugrave "&#249;">
+<!ENTITY uml "&#168;">
+<!ENTITY upsih "&#978;">
+<!ENTITY Upsilon "&#933;">
+<!ENTITY upsilon "&#965;">
+<!ENTITY Uuml "&#220;">
+<!ENTITY uuml "&#252;">
+<!ENTITY weierp "&#8472;">
+<!ENTITY Xi "&#926;">
+<!ENTITY xi "&#958;">
+<!ENTITY Yacute "&#221;">
+<!ENTITY yacute "&#253;">
+<!ENTITY yen "&#165;">
+<!ENTITY Yuml "&#376;">
+<!ENTITY yuml "&#255;">
+<!ENTITY Zeta "&#918;">
+<!ENTITY zeta "&#950;">
+<!ENTITY zwj "&#8205;">
+<!ENTITY zwnj "&#8204;">`.replace(/\n/g, ' ');
+
+  /**
+   * A reasonably strict xml declaration.
+   */
+  const XML_DECL = '<?xml version="1.0" standalone="no"?>';
+
+  /**
+   * The beginning of the XML doctype declaration.
+   */
+  const DOCTYPE_START = `<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [`;
+
+  /**
+   * The end of the XML docype declaration.
+   */
+  const DOCTYPE_END = ']>';
+
+  /**
+   * A full header for an SVG XML document.
+   */
+  const SVG_XML_HEADER = `${XML_DECL}
+    ${DOCTYPE_START}${HTML_ENTITIES}${DOCTYPE_END}`;
 
     void Promise.all([...diagrams].map(renderOneMarmaid));
   });
@@ -7511,17 +7796,34 @@ a.anchor-link {
 <!-- End of mermaid configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
 <main>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=17b8e150-4213-4c30-93b7-b2c2be05d0a9">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=706d40b5-2ed1-4d1d-bb81-19f9e33a664e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="Assignment-%23-01">Assignment # 01<a class="anchor-link" href="#Assignment-%23-01">¶</a></h1><h2 id="Python-Variables">Python Variables<a class="anchor-link" href="#Python-Variables">¶</a></h2>
+<h1 id="Assignment-%23-02">Assignment # 02<a class="anchor-link" href="#Assignment-%23-02">¶</a></h1><h2 id="Online-Bookstore">Online Bookstore<a class="anchor-link" href="#Online-Bookstore">¶</a></h2>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4330b039-26ee-4bb6-b38a-03702be76d90">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=6df7a0e4-ed7e-4df7-a66f-9fed722b3656">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-1-%E2%80%93-Normalize-the-Orders-Table">Task 1 – Normalize the Orders Table<a class="anchor-link" href="#Task-1-%E2%80%93-Normalize-the-Orders-Table">¶</a></h3><p>The original <code>orders</code> table stores one book per order, which is inefficient and not scalable. To resolve this issue, we normalized the data into two separate tables:</p>
+<ol>
+<li><p><strong>orders_table</strong> – Contains unique information for each order such as <code>order_id</code>, <code>order_date</code>, <code>customer_id</code>, and <code>payment_method</code>.</p>
+</li>
+<li><p><strong>order_items_table</strong> – Links each order to the books it contains, including <code>book_id</code> and <code>quantity</code>.</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=d99569c1-0688-4424-8e29-50e3b4eec8ea">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7529,15 +7831,32 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task1.1</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task1</span>
 
-<span class="c1"># Assigning the values</span>
-<span class="n">weight</span> <span class="o">=</span> <span class="s2">"10"</span>
-<span class="n">unit</span> <span class="o">=</span> <span class="s2">"kg"</span>
-<span class="n">product</span> <span class="o">=</span> <span class="s2">"apple"</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Printing all variables</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"The weight of the </span><span class="si">{}</span><span class="s2"> is </span><span class="si">{}</span><span class="s2"> </span><span class="si">{}</span><span class="s2">."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">weight</span><span class="p">,</span> <span class="n">unit</span><span class="p">))</span>
+<span class="c1"># Reading raw data</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
+
+<span class="c1"># Creating a normalized orders_table</span>
+<span class="n">orders_table</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[[</span><span class="s1">'order_id'</span><span class="p">,</span> <span class="s1">'order_date'</span><span class="p">,</span> <span class="s1">'customer_id'</span><span class="p">,</span> <span class="s1">'payment_method'</span><span class="p">]]</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
+
+<span class="c1"># Creating a normalized 'order_items' table</span>
+<span class="n">order_items_table</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[[</span><span class="s1">'order_id'</span><span class="p">,</span> <span class="s1">'book_id'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Adding a primary key to the order_items table for better reference</span>
+<span class="n">order_items_table</span><span class="p">[</span><span class="s1">'order_item_id'</span><span class="p">]</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">order_items_table</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Reordering columns for clarity</span>
+<span class="n">order_items_table</span> <span class="o">=</span> <span class="n">order_items_table</span><span class="p">[[</span><span class="s1">'order_item_id'</span><span class="p">,</span> <span class="s1">'order_id'</span><span class="p">,</span> <span class="s1">'book_id'</span><span class="p">,</span> <span class="s1">'quantity'</span><span class="p">]]</span>
+
+<span class="c1"># Displaying the normalized tables</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Orders Table:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">orders_table</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">Order Items Table:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">order_items_table</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7550,13 +7869,255 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>The weight of the apple is 10 kg.
+<pre>
+Orders Table:
 </pre>
 </div>
 </div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>order_id</th>
+<th>order_date</th>
+<th>customer_id</th>
+<th>payment_method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>19.11.23</td>
+<td>25</td>
+<td>credit card</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>23.08.23</td>
+<td>99</td>
+<td>credit card</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>31.12.23</td>
+<td>64</td>
+<td>credit card</td>
+</tr>
+<tr>
+<th>3</th>
+<td>4</td>
+<td>05.07.23</td>
+<td>34</td>
+<td>credit card</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>12.08.23</td>
+<td>98</td>
+<td>credit card</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>295</th>
+<td>296</td>
+<td>19.11.23</td>
+<td>57</td>
+<td>credit card</td>
+</tr>
+<tr>
+<th>296</th>
+<td>297</td>
+<td>24.08.23</td>
+<td>49</td>
+<td>cash</td>
+</tr>
+<tr>
+<th>297</th>
+<td>298</td>
+<td>11.12.23</td>
+<td>54</td>
+<td>cash</td>
+</tr>
+<tr>
+<th>298</th>
+<td>299</td>
+<td>19.11.23</td>
+<td>31</td>
+<td>cash</td>
+</tr>
+<tr>
+<th>299</th>
+<td>300</td>
+<td>19.11.23</td>
+<td>8</td>
+<td>cash</td>
+</tr>
+</tbody>
+</table>
+<p>300 rows × 4 columns</p>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4ece4674-cba0-4cb6-a5f2-72c11ea9f3d6">
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>
+Order Items Table:
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>order_item_id</th>
+<th>order_id</th>
+<th>book_id</th>
+<th>quantity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>1</td>
+<td>122</td>
+<td>1</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>2</td>
+<td>113</td>
+<td>3</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>3</td>
+<td>91</td>
+<td>2</td>
+</tr>
+<tr>
+<th>3</th>
+<td>4</td>
+<td>4</td>
+<td>62</td>
+<td>2</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>5</td>
+<td>22</td>
+<td>1</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>295</th>
+<td>296</td>
+<td>296</td>
+<td>44</td>
+<td>2</td>
+</tr>
+<tr>
+<th>296</th>
+<td>297</td>
+<td>297</td>
+<td>66</td>
+<td>4</td>
+</tr>
+<tr>
+<th>297</th>
+<td>298</td>
+<td>298</td>
+<td>3</td>
+<td>2</td>
+</tr>
+<tr>
+<th>298</th>
+<td>299</td>
+<td>299</td>
+<td>113</td>
+<td>4</td>
+</tr>
+<tr>
+<th>299</th>
+<td>300</td>
+<td>300</td>
+<td>163</td>
+<td>3</td>
+</tr>
+</tbody>
+</table>
+<p>300 rows × 4 columns</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5f561cd7-cf46-4001-beaa-ac56940370d6">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-2-%E2%80%93-Summary-Statistics-for-Reviews">Task 2 – Summary Statistics for Reviews<a class="anchor-link" href="#Task-2-%E2%80%93-Summary-Statistics-for-Reviews">¶</a></h3><p>To analyze the review data, we applied the <code>describe()</code> method to the <code>reviews</code> dataframe. This gives us a statistical summary for the <code>rating</code> column, including count, mean, min, max, and quartiles.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=32aee55c-22de-4814-ab37-b4543baec3bb">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7564,21 +8125,29 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task1.2</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task2</span>
 
-<span class="c1"># Defining a function that asks for age and city, then prints the message</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_user_info</span><span class="p">():</span>
-    <span class="c1"># Getting age of user</span>
-    <span class="n">age</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Please enter your age: "</span><span class="p">)</span>
-    
-    <span class="c1"># Getting city of user</span>
-    <span class="n">city</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">"Please enter your city: "</span><span class="p">)</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-    <span class="c1"># Printing user's age and city</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"You are </span><span class="si">{}</span><span class="s2"> years old and live in </span><span class="si">{}</span><span class="s2">."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">age</span><span class="p">,</span> <span class="n">city</span><span class="p">))</span>
+<span class="c1"># Loading  raw data</span>
+<span class="n">reviews</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/reviews.csv"</span><span class="p">)</span>
 
-<span class="c1"># Calling the function to execute it</span>
-<span class="n">get_user_info</span><span class="p">()</span>
+<span class="c1"># Showing first few rows to understand structure</span>
+<span class="n">display</span><span class="p">(</span><span class="n">reviews</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+
+<span class="c1"># Confirming that 'rating' column exists and is numeric</span>
+<span class="n">reviews</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+
+<span class="c1"># Geting summary statistics</span>
+<span class="n">summary</span> <span class="o">=</span> <span class="n">reviews</span><span class="o">.</span><span class="n">describe</span><span class="p">()</span>
+
+<span class="c1"># Displaying mean and min for the 'rating' column</span>
+<span class="n">mean_rating</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'mean'</span><span class="p">,</span> <span class="s1">'rating'</span><span class="p">]</span>
+<span class="n">min_rating</span> <span class="o">=</span> <span class="n">summary</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="s1">'min'</span><span class="p">,</span> <span class="s1">'rating'</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Mean Rating: </span><span class="si">{</span><span class="n">mean_rating</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Minimum Rating: </span><span class="si">{</span><span class="n">min_rating</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7590,28 +8159,105 @@ a.anchor-link {
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>review_id</th>
+<th>book_id</th>
+<th>rating</th>
+<th>review_text</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>122</td>
+<td>4.2</td>
+<td>Per line really approach.</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>117</td>
+<td>1.9</td>
+<td>Consumer yeah oil walk try color support yeah.</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>132</td>
+<td>4.5</td>
+<td>Area social decide need threat exactly reveal.</td>
+</tr>
+<tr>
+<th>3</th>
+<td>4</td>
+<td>16</td>
+<td>1.8</td>
+<td>Fear crime site billion beat me every.</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>97</td>
+<td>4.0</td>
+<td>Read food be sign stay.</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>You are 25 years old and live in Baku.
+<pre>&lt;class 'pandas.core.frame.DataFrame'&gt;
+RangeIndex: 150 entries, 0 to 149
+Data columns (total 4 columns):
+ #   Column       Non-Null Count  Dtype  
+---  ------       --------------  -----  
+ 0   review_id    150 non-null    int64  
+ 1   book_id      150 non-null    int64  
+ 2   rating       150 non-null    float64
+ 3   review_text  150 non-null    object 
+dtypes: float64(1), int64(2), object(1)
+memory usage: 4.8+ KB
+Mean Rating: 2.85
+Minimum Rating: 1.0
 </pre>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9a32c93f-c1a7-471f-b4a9-82930d702acb">
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c8fb4d72-39fb-4804-b397-7e7e8d7cf4ab">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="2.-Python-Strings">2. Python Strings<a class="anchor-link" href="#2.-Python-Strings">¶</a></h2>
+<h3 id="Task-3-%E2%80%93-Increase-Prices-for-Fiction-Category">Task 3 – Increase Prices for Fiction Category<a class="anchor-link" href="#Task-3-%E2%80%93-Increase-Prices-for-Fiction-Category">¶</a></h3><p>Joined the <code>books</code> and <code>categories</code> tables using the <code>category_id</code> foreign key. After identifying all books in the <strong>Fiction</strong> category, increased their prices by <strong>15%</strong>.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9b55b1c9-2c35-4f81-ab00-43c25af2cb6d">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=2ea095bc-25a9-43b4-a906-c225ec20f97c">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7619,20 +8265,24 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task2.1</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task3</span>
 
-<span class="c1"># Assigning string</span>
-<span class="n">sentence</span> <span class="o">=</span> <span class="s2">"Python is a popular programming language"</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Adding a question mark to the end</span>
-<span class="n">sentence_with_question</span> <span class="o">=</span> <span class="n">sentence</span> <span class="o">+</span> <span class="s2">"?"</span>
+<span class="c1"># Loading raw data</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
+<span class="n">categories</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/categories.csv"</span><span class="p">)</span>
 
-<span class="c1"># Count the number of spaces in the string</span>
-<span class="n">space_count</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">" "</span><span class="p">)</span>
+<span class="c1"># Merging books with categories on 'category_id'</span>
+<span class="n">books_with_category</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">books</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'category_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
 
-<span class="c1"># Print the results</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Modified sentence:"</span><span class="p">,</span> <span class="n">sentence_with_question</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Number of spaces in the original sentence:"</span><span class="p">,</span> <span class="n">space_count</span><span class="p">)</span>
+<span class="c1"># Increasing the price by 15% only for 'Fiction' category</span>
+<span class="n">books_with_category</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">books_with_category</span><span class="p">[</span><span class="s1">'category_name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Fiction'</span><span class="p">,</span> <span class="s1">'price'</span><span class="p">]</span> <span class="o">*=</span> <span class="mf">1.15</span>
+
+<span class="c1"># Display updated fiction books</span>
+<span class="n">fiction_books</span> <span class="o">=</span> <span class="n">books_with_category</span><span class="p">[</span><span class="n">books_with_category</span><span class="p">[</span><span class="s1">'category_name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Fiction'</span><span class="p">]</span>
+<span class="n">display</span><span class="p">(</span><span class="n">fiction_books</span><span class="p">[[</span><span class="s1">'title'</span><span class="p">,</span> <span class="s1">'price'</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -7644,15 +8294,244 @@ a.anchor-link {
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Modified sentence: Python is a popular programming language?
-Number of spaces in the original sentence: 5
-</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>title</th>
+<th>price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>3</th>
+<td>Function-based bandwidth-monitored data-warehouse</td>
+<td>54.9470</td>
+</tr>
+<tr>
+<th>4</th>
+<td>Monitored intangible focus group</td>
+<td>39.2265</td>
+</tr>
+<tr>
+<th>9</th>
+<td>Fundamental encompassing instruction set</td>
+<td>35.9950</td>
+</tr>
+<tr>
+<th>14</th>
+<td>Horizontal zero tolerance projection</td>
+<td>33.3040</td>
+</tr>
+<tr>
+<th>23</th>
+<td>Distributed object-oriented capacity</td>
+<td>50.1515</td>
+</tr>
+<tr>
+<th>25</th>
+<td>Visionary stable capacity</td>
+<td>28.1175</td>
+</tr>
+<tr>
+<th>28</th>
+<td>Proactive bandwidth-monitored Graphical User I...</td>
+<td>10.2465</td>
+</tr>
+<tr>
+<th>35</th>
+<td>Universal asymmetric migration</td>
+<td>22.2180</td>
+</tr>
+<tr>
+<th>41</th>
+<td>Team-oriented intangible utilization</td>
+<td>55.9130</td>
+</tr>
+<tr>
+<th>49</th>
+<td>Managed heuristic definition</td>
+<td>41.8830</td>
+</tr>
+<tr>
+<th>61</th>
+<td>Mandatory context-sensitive collaboration</td>
+<td>54.5445</td>
+</tr>
+<tr>
+<th>70</th>
+<td>Up-sized global infrastructure</td>
+<td>10.5340</td>
+</tr>
+<tr>
+<th>75</th>
+<td>Synchronized next generation hierarchy</td>
+<td>40.6180</td>
+</tr>
+<tr>
+<th>76</th>
+<td>Phased incremental infrastructure</td>
+<td>11.9370</td>
+</tr>
+<tr>
+<th>77</th>
+<td>Profit-focused regional encoding</td>
+<td>50.6460</td>
+</tr>
+<tr>
+<th>108</th>
+<td>Right-sized asynchronous hierarchy</td>
+<td>20.1825</td>
+</tr>
+<tr>
+<th>112</th>
+<td>Cloned clear-thinking focus group</td>
+<td>52.2790</td>
+</tr>
+<tr>
+<th>118</th>
+<td>Multi-channeled asymmetric attitude</td>
+<td>35.3165</td>
+</tr>
+<tr>
+<th>124</th>
+<td>Enterprise-wide full-range orchestration</td>
+<td>28.0370</td>
+</tr>
+<tr>
+<th>134</th>
+<td>Cross-group analyzing flexibility</td>
+<td>24.1385</td>
+</tr>
+<tr>
+<th>135</th>
+<td>Customer-focused contextually-based neural-net</td>
+<td>38.9620</td>
+</tr>
+<tr>
+<th>137</th>
+<td>Cross-platform foreground Graphical User Inter...</td>
+<td>48.1505</td>
+</tr>
+<tr>
+<th>140</th>
+<td>Persevering actuating solution</td>
+<td>18.1240</td>
+</tr>
+<tr>
+<th>151</th>
+<td>Progressive systemic software</td>
+<td>34.2240</td>
+</tr>
+<tr>
+<th>153</th>
+<td>Universal mobile encoding</td>
+<td>40.1120</td>
+</tr>
+<tr>
+<th>156</th>
+<td>Versatile intermediate Local Area Network</td>
+<td>41.1470</td>
+</tr>
+<tr>
+<th>158</th>
+<td>Decentralized hybrid knowledge user</td>
+<td>10.9250</td>
+</tr>
+<tr>
+<th>159</th>
+<td>Configurable full-range ability</td>
+<td>38.6745</td>
+</tr>
+<tr>
+<th>160</th>
+<td>Reverse-engineered fault-tolerant groupware</td>
+<td>22.0110</td>
+</tr>
+<tr>
+<th>162</th>
+<td>Total 24hour synergy</td>
+<td>45.8045</td>
+</tr>
+<tr>
+<th>171</th>
+<td>Seamless analyzing circuit</td>
+<td>9.3265</td>
+</tr>
+<tr>
+<th>172</th>
+<td>Assimilated incremental Graphical User Interface</td>
+<td>15.1570</td>
+</tr>
+<tr>
+<th>176</th>
+<td>Expanded optimizing forecast</td>
+<td>38.3410</td>
+</tr>
+<tr>
+<th>178</th>
+<td>Adaptive motivating frame</td>
+<td>18.2390</td>
+</tr>
+<tr>
+<th>184</th>
+<td>Function-based 4thgeneration workforce</td>
+<td>6.9000</td>
+</tr>
+<tr>
+<th>185</th>
+<td>Fundamental disintermediate Internet solution</td>
+<td>44.6200</td>
+</tr>
+<tr>
+<th>187</th>
+<td>Synergistic foreground access</td>
+<td>16.7555</td>
+</tr>
+<tr>
+<th>193</th>
+<td>Multi-channeled secondary synergy</td>
+<td>15.6170</td>
+</tr>
+<tr>
+<th>195</th>
+<td>Adaptive didactic hub</td>
+<td>31.3145</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=58227989-b6b2-487b-ae72-74836ee2f8c0">
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=67b9adc8-02f7-4a1f-9732-d19a86c17e25">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-4-%E2%80%93-Revenue-by-Payment-Method">Task 4 – Revenue by Payment Method<a class="anchor-link" href="#Task-4-%E2%80%93-Revenue-by-Payment-Method">¶</a></h3><p>Grouped the <code>orders</code> table by <code>payment_method</code> and calculated the total revenue (sum of <code>total_price</code>) for each group.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=1d294470-6dcd-422a-8279-c849e44684f1">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7660,19 +8539,22 @@ Number of spaces in the original sentence: 5
 <div class="jp-InputPrompt jp-InputArea-prompt">In [4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task2.2</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task4</span>
 
-<span class="c1"># Assigning string</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">"The European Union is a political and economic union of 27 member states"</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Converting the string to lowercase</span>
-<span class="n">lower_text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+<span class="c1"># Loading orders dataset</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
 
-<span class="c1"># Counting the occurrences of 'e'</span>
-<span class="n">e_count</span> <span class="o">=</span> <span class="n">lower_text</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">'e'</span><span class="p">)</span>
+<span class="c1"># Grouping by 'payment_method' and calculating total revenue</span>
+<span class="n">revenue_by_payment</span> <span class="o">=</span> <span class="n">orders</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'payment_method'</span><span class="p">)[</span><span class="s1">'total_price'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
 
-<span class="c1"># Printing the result</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Number of occurrences of the string 'e':"</span><span class="p">,</span> <span class="n">e_count</span><span class="p">)</span>
+<span class="c1"># Renaming column for clarity</span>
+<span class="n">revenue_by_payment</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">'payment_method'</span><span class="p">,</span> <span class="s1">'total_revenue'</span><span class="p">]</span>
+
+<span class="c1"># Display the result</span>
+<span class="n">display</span><span class="p">(</span><span class="n">revenue_by_payment</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7684,25 +8566,59 @@ Number of spaces in the original sentence: 5
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Number of occurrences of the string 'e': 7
-</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>payment_method</th>
+<th>total_revenue</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>cash</td>
+<td>8971.13</td>
+</tr>
+<tr>
+<th>1</th>
+<td>credit card</td>
+<td>10011.67</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=89def85d-839b-465b-9ee8-acf9ed347228">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=036fc9f2-999a-401f-aa48-bf6fcacc09fc">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="3.-Python-Lists,-Sets,-Tuples,-Dictionaries">3. Python Lists, Sets, Tuples, Dictionaries<a class="anchor-link" href="#3.-Python-Lists,-Sets,-Tuples,-Dictionaries">¶</a></h2>
+<h3 id="Task-5-%E2%80%93-Count-of-Non-Fiction-Books">Task 5 – Count of Non-Fiction Books<a class="anchor-link" href="#Task-5-%E2%80%93-Count-of-Non-Fiction-Books">¶</a></h3><p>Joined the <code>books</code> table with the <code>categories</code> table on <code>category_id</code>. Then, filtered the merged dataset to only include books from the <strong>'Non-Fiction'</strong> category.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=37b52151-89ec-45a8-996c-bc06abcd96b7">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b8dd1c0e-6c3a-4958-bce6-01fa9a698714">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7710,19 +8626,25 @@ Number of spaces in the original sentence: 5
 <div class="jp-InputPrompt jp-InputArea-prompt">In [5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task3.1</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task 5</span>
 
-<span class="c1"># Assigning list</span>
-<span class="n">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Adding 6 to the list</span>
-<span class="n">numbers</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+<span class="c1"># Loading raw data</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
+<span class="n">categories</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/categories.csv"</span><span class="p">)</span>
 
-<span class="c1"># Sorting the list in descending order</span>
-<span class="n">numbers</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">reverse</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="c1"># Merging books with categories to get 'category_name'</span>
+<span class="n">books_with_category</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">books</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'category_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
 
-<span class="c1"># Printing list</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">)</span>
+<span class="c1"># Filtering only Non-Fiction books</span>
+<span class="n">non_fiction_books</span> <span class="o">=</span> <span class="n">books_with_category</span><span class="p">[</span><span class="n">books_with_category</span><span class="p">[</span><span class="s1">'category_name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Non-Fiction'</span><span class="p">]</span>
+
+<span class="c1"># Counting total number of books in that category</span>
+<span class="n">total_non_fiction_books</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">non_fiction_books</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Total number of books in 'Non-Fiction' category: </span><span class="si">{</span><span class="n">total_non_fiction_books</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7735,13 +8657,25 @@ Number of spaces in the original sentence: 5
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[6, 5, 4, 3, 2, 1]
+<pre>Total number of books in 'Non-Fiction' category: 36
 </pre>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=4c71ebb9-392a-41a2-b1b4-36988b66e3a8">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=17eddd98-1cbb-49b2-9679-61b4dcb42398">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-6-%E2%80%93-Average-Rating-for-Orders-on-19.11.23">Task 6 – Average Rating for Orders on 19.11.23<a class="anchor-link" href="#Task-6-%E2%80%93-Average-Rating-for-Orders-on-19.11.23">¶</a></h3><p>Filtered all orders that were placed on <strong>November 19, 2023</strong>, and extracted the associated <code>book_id</code>s.
+Then, looked up the reviews related to these books and calculated the average rating.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=07f8f1e8-faef-484f-bd95-238b5e063e7d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7749,24 +8683,32 @@ Number of spaces in the original sentence: 5
 <div class="jp-InputPrompt jp-InputArea-prompt">In [6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task3.2</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task 6</span>
 
-<span class="c1"># Assignings lists</span>
-<span class="n">list1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
-<span class="n">list2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Converting lists to tuples</span>
-<span class="n">tuple1</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">list1</span><span class="p">)</span>
-<span class="n">tuple2</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">list2</span><span class="p">)</span>
+<span class="c1"># Loading raw data</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
+<span class="n">reviews</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/reviews.csv"</span><span class="p">)</span>
 
-<span class="c1"># Using set intersection method to find common elements</span>
-<span class="n">common_elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">tuple1</span><span class="p">)</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">tuple2</span><span class="p">))</span>
+<span class="c1"># Ensuring date format is consistent</span>
+<span class="n">orders</span><span class="p">[</span><span class="s1">'order_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">orders</span><span class="p">[</span><span class="s1">'order_date'</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'</span><span class="si">%d</span><span class="s1">.%m.%y'</span><span class="p">)</span>
 
-<span class="c1"># Print result</span>
-<span class="k">if</span> <span class="n">common_elements</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"Common elements:"</span><span class="p">,</span> <span class="n">common_elements</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">"No common elements found."</span><span class="p">)</span>
+<span class="c1"># Filtering orders placed on 19.11.2023</span>
+<span class="n">target_date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">'19.11.23'</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'</span><span class="si">%d</span><span class="s1">.%m.%y'</span><span class="p">)</span>
+<span class="n">orders_on_target_date</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">orders</span><span class="p">[</span><span class="s1">'order_date'</span><span class="p">]</span> <span class="o">==</span> <span class="n">target_date</span><span class="p">]</span>
+
+<span class="c1"># Getting all unique book_ids from orders on 19.11.2023</span>
+<span class="n">book_ids</span> <span class="o">=</span> <span class="n">orders_on_target_date</span><span class="p">[</span><span class="s1">'book_id'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+<span class="c1"># Filtering reviews for those books</span>
+<span class="n">reviews_for_books</span> <span class="o">=</span> <span class="n">reviews</span><span class="p">[</span><span class="n">reviews</span><span class="p">[</span><span class="s1">'book_id'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">book_ids</span><span class="p">)]</span>
+
+<span class="c1"># Calculating average rating</span>
+<span class="n">average_rating</span> <span class="o">=</span> <span class="n">reviews_for_books</span><span class="p">[</span><span class="s1">'rating'</span><span class="p">]</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Average review rating for books ordered on 19.11.23: </span><span class="si">{</span><span class="n">average_rating</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7779,13 +8721,27 @@ Number of spaces in the original sentence: 5
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Common elements: [3]
+<pre>Average review rating for books ordered on 19.11.23: 3.17
 </pre>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=f64f7029-3115-42ac-a506-eddda9e04e37">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=5b55fed6-4697-4182-9836-a588a4e1ba8b">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-7-%E2%80%93-The-Most-Expensive-Book-in-the-%E2%80%98Science%E2%80%99-Category">Task 7 – The Most Expensive Book in the ‘Science’ Category<a class="anchor-link" href="#Task-7-%E2%80%93-The-Most-Expensive-Book-in-the-%E2%80%98Science%E2%80%99-Category">¶</a></h3><p>In this task, the <code>books</code> and <code>categories</code> tables were merged using the <code>category_id</code> as the key.<br/>
+After the merge, the data was filtered to include only the books categorized as <strong>"Science"</strong>.</p>
+<p>The resulting subset was sorted by the <code>price</code> column in descending order.<br/>
+From this sorted data, the top row was selected in order to identify the most expensive book in the Science category.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=679c5ac2-93b8-4e20-b219-13f188780678">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7793,18 +8749,26 @@ Number of spaces in the original sentence: 5
 <div class="jp-InputPrompt jp-InputArea-prompt">In [7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task3.3</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task7</span>
 
-<span class="c1"># Assigning tuple</span>
-<span class="n">days</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Monday"</span><span class="p">,</span> <span class="s2">"Tuesday"</span><span class="p">,</span> <span class="s2">"Wednesday"</span><span class="p">,</span> <span class="s2">"Thursday"</span><span class="p">,</span> <span class="s2">"Friday"</span><span class="p">)</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Accessing the second item</span>
-<span class="n">second_day</span> <span class="o">=</span> <span class="n">days</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Second day:"</span><span class="p">,</span> <span class="n">second_day</span><span class="p">)</span>
+<span class="c1"># Load raw data</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
+<span class="n">categories</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/categories.csv"</span><span class="p">)</span>
 
-<span class="c1"># Unpacking the tuple into separate variables</span>
-<span class="n">mon</span><span class="p">,</span> <span class="n">tue</span><span class="p">,</span> <span class="n">wed</span><span class="p">,</span> <span class="n">thu</span><span class="p">,</span> <span class="n">fri</span> <span class="o">=</span> <span class="n">days</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">mon</span><span class="p">,</span> <span class="n">tue</span><span class="p">,</span> <span class="n">wed</span><span class="p">,</span> <span class="n">thu</span><span class="p">,</span> <span class="n">fri</span><span class="p">)</span>
+<span class="c1"># Merging to get category names</span>
+<span class="n">books_with_category</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">books</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'category_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Filtering books in 'Science' category</span>
+<span class="n">science_books</span> <span class="o">=</span> <span class="n">books_with_category</span><span class="p">[</span><span class="n">books_with_category</span><span class="p">[</span><span class="s1">'category_name'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Science'</span><span class="p">]</span>
+
+<span class="c1"># Finding most expensive book</span>
+<span class="n">most_expensive_science_book</span> <span class="o">=</span> <span class="n">science_books</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'price'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Displaying result</span>
+<span class="n">display</span><span class="p">(</span><span class="n">most_expensive_science_book</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7816,40 +8780,64 @@ Number of spaces in the original sentence: 5
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Second day: Tuesday
-Monday Tuesday Wednesday Thursday Friday
-</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>book_id</th>
+<th>title</th>
+<th>author</th>
+<th>price</th>
+<th>category_id</th>
+<th>category_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>145</th>
+<td>146</td>
+<td>Team-oriented transitional process improvement</td>
+<td>Angela Brown</td>
+<td>47.53</td>
+<td>3</td>
+<td>Science</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=9a1ff2e8-3d4c-4a0b-adac-5f0e31c35b9f">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=2858a2cc-49a0-4c95-89fd-e536605fb05e">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="3.4-Explanation-of-Keys-and-Values:">3.4 Explanation of Keys and Values:<a class="anchor-link" href="#3.4-Explanation-of-Keys-and-Values:">¶</a></h3><p>Keys in the parent dictionary (top_books):"book1", "book2", "book3", "book4", "book5".
-Values in the parent dictionary: Each value is child dictionary representing details of the book.</p>
-<p>Keys in the child dictionaries:"title", "author", "published".
-Values in the child dictionaries: The actual information about the book (title and author and published year).</p>
+<h3 id="Task-8-%E2%80%93-Providing-Date,-Customer-Name,-Email,-and-Ordered-Books-of-the-Most-Recent-Orders">Task 8 – Providing Date, Customer Name, Email, and Ordered Books of the Most Recent Orders<a class="anchor-link" href="#Task-8-%E2%80%93-Providing-Date,-Customer-Name,-Email,-and-Ordered-Books-of-the-Most-Recent-Orders">¶</a></h3><p>In this task, the most recent order date was determined from the <code>orders</code> table.<br/>
+Then, all orders placed on that date were filtered. These were joined with the <code>customers</code> and <code>books</code> tables<br/>
+to obtain customer names, email addresses, and book titles.</p>
 </div>
 </div>
 </div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=1db2ac1d-2920-4934-bc25-8db5630c75ef">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="3.4-Why-this-structure?:">3.4 Why this structure?:<a class="anchor-link" href="#3.4-Why-this-structure?:">¶</a></h3><p>Dictionaries are ordered and changeable collections that store data using unique keys. This makes them ideal for organizing books with clear keys like "title" and "author." Unlike lists or tuples, dictionaries label data with keys instead of just positions, and unlike sets, they keep order and allow key-value pairs without duplicates.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs" id="cell-id=204aec82-58bf-4786-aa9e-3106296f651e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a04d776e-3c80-41dc-9a6b-e706ed66b474">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7857,53 +8845,112 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-InputPrompt jp-InputArea-prompt">In [8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task3.4</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task8</span>
 
-<span class="c1"># Assigning child dictionaries</span>
-<span class="n">book1</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"To Kill a Mockingbird"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="p">:</span> <span class="s2">"Harper Lee"</span><span class="p">,</span>
-    <span class="s2">"published"</span><span class="p">:</span> <span class="mi">1960</span>
-<span class="p">}</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="n">book2</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"The Lord of the Rings"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="p">:</span> <span class="s2">"J.R.R. Tolkien"</span><span class="p">,</span>
-    <span class="s2">"published"</span><span class="p">:</span> <span class="mi">1955</span>
-<span class="p">}</span>
+<span class="c1"># Load raw data</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/customers.csv"</span><span class="p">)</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
 
-<span class="n">book3</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"The Little Prince"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="p">:</span> <span class="s2">"Antoine de Saint-Exupéry"</span><span class="p">,</span>
-    <span class="s2">"published"</span><span class="p">:</span> <span class="mi">1943</span>
-<span class="p">}</span>
+<span class="c1"># Converting 'order_date' to datetime</span>
+<span class="n">orders</span><span class="p">[</span><span class="s1">'order_date'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">orders</span><span class="p">[</span><span class="s1">'order_date'</span><span class="p">],</span> <span class="nb">format</span><span class="o">=</span><span class="s1">'</span><span class="si">%d</span><span class="s1">.%m.%y'</span><span class="p">)</span>
 
-<span class="n">book4</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"1984"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="p">:</span> <span class="s2">"George Orwell"</span><span class="p">,</span>
-    <span class="s2">"published"</span><span class="p">:</span> <span class="mi">1949</span>
-<span class="p">}</span>
+<span class="c1"># Finding the most recent order date</span>
+<span class="n">latest_date</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="s1">'order_date'</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
 
-<span class="n">book5</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"title"</span><span class="p">:</span> <span class="s2">"Pride and Prejudice"</span><span class="p">,</span>
-    <span class="s2">"author"</span><span class="p">:</span> <span class="s2">"Jane Austen"</span><span class="p">,</span>
-    <span class="s2">"published"</span><span class="p">:</span> <span class="mi">1813</span>
-<span class="p">}</span>
+<span class="c1"># Filtering orders made on the most recent date</span>
+<span class="n">latest_orders</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="n">orders</span><span class="p">[</span><span class="s1">'order_date'</span><span class="p">]</span> <span class="o">==</span> <span class="n">latest_date</span><span class="p">]</span>
 
-<span class="c1"># Assigning parent dictionary for childs</span>
-<span class="n">top_books</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"book1"</span><span class="p">:</span> <span class="n">book1</span><span class="p">,</span>
-    <span class="s2">"book2"</span><span class="p">:</span> <span class="n">book2</span><span class="p">,</span>
-    <span class="s2">"book3"</span><span class="p">:</span> <span class="n">book3</span><span class="p">,</span>
-    <span class="s2">"book4"</span><span class="p">:</span> <span class="n">book4</span><span class="p">,</span>
-    <span class="s2">"book5"</span><span class="p">:</span> <span class="n">book5</span>
-<span class="p">}</span>
+<span class="c1"># Merging orders with customers to get customer name and email</span>
+<span class="n">latest_orders_with_customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">latest_orders</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'customer_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Merging with books to get book title</span>
+<span class="n">latest_orders_full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">latest_orders_with_customers</span><span class="p">,</span> <span class="n">books</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'book_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Selecting relevant columns to display</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">latest_orders_full</span><span class="p">[[</span><span class="s1">'order_date'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">,</span> <span class="s1">'title'</span><span class="p">]]</span>
+
+<span class="c1"># Displaying the result</span>
+<span class="n">display</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fdcd61df-06e4-43df-964b-0dbae0adabd1">
+<div class="jp-Cell-outputWrapper">
+<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
+</div>
+<div class="jp-OutputArea jp-Cell-outputArea">
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>order_date</th>
+<th>name</th>
+<th>email</th>
+<th>title</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>2024-05-16</td>
+<td>Kimberly Ford</td>
+<td>angela74@example.net</td>
+<td>Phased full-range firmware</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2024-05-16</td>
+<td>Curtis Jenkins</td>
+<td>epitts@example.com</td>
+<td>Universal mobile encoding</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=45f395a4-2019-453b-8eec-b90ac032278d">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-9-%E2%80%93-Identifying-the-Most-Popular-Book-Based-on-Order-Frequency">Task 9 – Identifying the Most Popular Book Based on Order Frequency<a class="anchor-link" href="#Task-9-%E2%80%93-Identifying-the-Most-Popular-Book-Based-on-Order-Frequency">¶</a></h3><p>In this task, the number of times each book was ordered was calculated by grouping the <code>orders</code> table by <code>book_id</code>.<br/>
+The resulting counts were sorted in descending order, and the top result was selected.</p>
+<p>To make the output more interpretable, the most ordered book ID was joined with the <code>books</code> table<br/>
+to retrieve its title and additional details.</p>
+<blockquote>
+<p><strong>Note:</strong> Book IDs 48 and 79 are tied with 7 orders each. A stable sort is used so the result is deterministic (the lower <code>book_id</code> is returned).</p>
+</blockquote>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ebb627ac-7229-48a4-a658-5c27a8768135">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7911,13 +8958,26 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-InputPrompt jp-InputArea-prompt">In [9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task3.5</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task9</span>
 
-<span class="k">for</span> <span class="n">book</span> <span class="ow">in</span> <span class="n">top_books</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-    <span class="n">book</span><span class="p">[</span><span class="s2">"language"</span><span class="p">]</span> <span class="o">=</span> <span class="s2">"English"</span>
+<span class="c1"># Importing pandas library </span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Printing parent dictionary</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">top_books</span><span class="p">)</span>
+<span class="c1"># Reading datasets</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
+
+<span class="c1"># Grouping by book_id and counting the number of orders</span>
+<span class="n">book_order_counts</span> <span class="o">=</span> <span class="n">orders</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'book_id'</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">'order_count'</span><span class="p">)</span>
+
+<span class="c1"># Sorting in descending order to find the most ordered book</span>
+<span class="n">most_ordered</span> <span class="o">=</span> <span class="n">book_order_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">'order_count'</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">kind</span><span class="o">=</span><span class="s1">'stable'</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="c1"># Merging with books to get the book title and details</span>
+<span class="n">most_popular_book</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">most_ordered</span><span class="p">,</span> <span class="n">books</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'book_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Displaying the result</span>
+<span class="n">display</span><span class="p">(</span><span class="n">most_popular_book</span><span class="p">[[</span><span class="s1">'book_id'</span><span class="p">,</span> <span class="s1">'title'</span><span class="p">,</span> <span class="s1">'order_count'</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -7929,25 +8989,59 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>{'book1': {'title': 'To Kill a Mockingbird', 'author': 'Harper Lee', 'published': 1960, 'language': 'English'}, 'book2': {'title': 'The Lord of the Rings', 'author': 'J.R.R. Tolkien', 'published': 1955, 'language': 'English'}, 'book3': {'title': 'The Little Prince', 'author': 'Antoine de Saint-Exupéry', 'published': 1943, 'language': 'English'}, 'book4': {'title': '1984', 'author': 'George Orwell', 'published': 1949, 'language': 'English'}, 'book5': {'title': 'Pride and Prejudice', 'author': 'Jane Austen', 'published': 1813, 'language': 'English'}}
-</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>book_id</th>
+<th>title</th>
+<th>order_count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>48</td>
+<td>Robust cohesive benchmark</td>
+<td>7</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=76cf9938-74e3-4502-b29e-63c2671d81bd">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=96c13f85-7939-4038-986e-09f1e92f77a7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="4.-Python-NumPy">4. Python NumPy<a class="anchor-link" href="#4.-Python-NumPy">¶</a></h2>
+<h3 id="Task-10-%E2%80%93-Identifying-Customers-Who-Spent-More-Than-100-Euros">Task 10 – Identifying Customers Who Spent More Than 100 Euros<a class="anchor-link" href="#Task-10-%E2%80%93-Identifying-Customers-Who-Spent-More-Than-100-Euros">¶</a></h3><p>In this task, the total amount spent by each customer was calculated by grouping the <code>orders</code> table by <code>customer_id</code><br/>
+and summing the <code>total_price</code> values.</p>
+<p>Customers with total spending above 100 euros were filtered.<br/>
+To provide meaningful output, their names and email addresses were added by joining the <code>customers</code> table.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ca9b9f58-cd0e-49cf-b417-2d01190a775f">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ff2113d5-44d5-4b43-8900-cc7f055c17c7">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -7955,16 +9049,26 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-InputPrompt jp-InputArea-prompt">In [10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task4.1</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task10</span>
 
-<span class="c1"># Importing numpy library</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Assigning 3D array</span>
-<span class="n">arr3D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">101</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="c1"># Reading datasets</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/customers.csv"</span><span class="p">)</span>
 
-<span class="c1"># Printing result</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">arr3D</span><span class="p">)</span>
+<span class="c1"># Grouping by customer_id and calculating total spending</span>
+<span class="n">customer_spending</span> <span class="o">=</span> <span class="n">orders</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">'customer_id'</span><span class="p">)[</span><span class="s1">'total_price'</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+
+<span class="c1"># Filtering customers who spent more than 100 euros</span>
+<span class="n">high_spenders</span> <span class="o">=</span> <span class="n">customer_spending</span><span class="p">[</span><span class="n">customer_spending</span><span class="p">[</span><span class="s1">'total_price'</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">]</span>
+
+<span class="c1"># Merging with customers to get name and email</span>
+<span class="n">high_spenders_details</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">high_spenders</span><span class="p">,</span> <span class="n">customers</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'customer_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Displaying relevant columns</span>
+<span class="n">display</span><span class="p">(</span><span class="n">high_spenders_details</span><span class="p">[[</span><span class="s1">'customer_id'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">,</span> <span class="s1">'email'</span><span class="p">,</span> <span class="s1">'total_price'</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -7976,27 +9080,132 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[[[76 20]
-  [ 7 26]
-  [41 58]
-  [95 36]]
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
- [[70 87]
-  [40 12]
-  [57  1]
-  [80 52]]
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
- [[58 32]
-  [41 93]
-  [77 81]
-  [50 72]]]
-</pre>
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>customer_id</th>
+<th>name</th>
+<th>email</th>
+<th>total_price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>Hannah Townsend</td>
+<td>heather88@example.com</td>
+<td>223.80</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>Ashley Morton</td>
+<td>hannahbrooks@example.net</td>
+<td>185.74</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>Christina Cross</td>
+<td>kathrynmiller@example.org</td>
+<td>405.64</td>
+</tr>
+<tr>
+<th>3</th>
+<td>4</td>
+<td>William Smith</td>
+<td>erinweiss@example.net</td>
+<td>209.28</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>Curtis Jenkins</td>
+<td>epitts@example.com</td>
+<td>168.87</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>65</th>
+<td>93</td>
+<td>Lisa Jones</td>
+<td>juliejordan@example.com</td>
+<td>155.93</td>
+</tr>
+<tr>
+<th>66</th>
+<td>95</td>
+<td>William Walter</td>
+<td>bnavarro@example.com</td>
+<td>148.85</td>
+</tr>
+<tr>
+<th>67</th>
+<td>96</td>
+<td>Patricia Frazier</td>
+<td>ronald54@example.net</td>
+<td>185.20</td>
+</tr>
+<tr>
+<th>68</th>
+<td>98</td>
+<td>Christopher Martinez</td>
+<td>paulking@example.com</td>
+<td>121.31</td>
+</tr>
+<tr>
+<th>69</th>
+<td>99</td>
+<td>Shane Nichols</td>
+<td>jonessierra@example.net</td>
+<td>395.70</td>
+</tr>
+</tbody>
+</table>
+<p>70 rows × 4 columns</p>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fe0ed78f-c13e-47de-b8ba-2e0999137dd8">
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7d41e306-b11d-49e1-ad6e-416c59ce85f4">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-11-%E2%80%93-Identifying-Books-That-Have-Never-Been-Ordered">Task 11 – Identifying Books That Have Never Been Ordered<a class="anchor-link" href="#Task-11-%E2%80%93-Identifying-Books-That-Have-Never-Been-Ordered">¶</a></h3><p>In this task, the list of all book IDs that appear in the <code>orders</code> table was extracted.<br/>
+Then, books that do not exist in this list were identified by comparing them against the <code>books</code> table.</p>
+<p>A left join or set difference was used to find books that have never been referenced in any order.<br/>
+This allows for detecting items in the catalog that have not yet been sold.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=fb2235e9-f5b6-4693-b2e5-8058e03f8e6d">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8004,13 +9213,23 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-InputPrompt jp-InputArea-prompt">In [11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task4.2</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task11</span>
 
-<span class="c1"># Calculating mean of 3D array</span>
-<span class="n">mean_value</span> <span class="o">=</span> <span class="n">arr3D</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Printing result</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"Mean of all elements:"</span><span class="p">,</span> <span class="n">mean_value</span><span class="p">)</span>
+<span class="c1"># Reading datasets</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
+
+<span class="c1"># Extracting all ordered book IDs</span>
+<span class="n">ordered_book_ids</span> <span class="o">=</span> <span class="n">orders</span><span class="p">[</span><span class="s1">'book_id'</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+
+<span class="c1"># Filtering books that are not in the ordered list</span>
+<span class="n">unordered_books</span> <span class="o">=</span> <span class="n">books</span><span class="p">[</span><span class="n">books</span><span class="p">[</span><span class="s1">'book_id'</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">ordered_book_ids</span><span class="p">)</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span>
+
+<span class="c1"># Displaying the result</span>
+<span class="n">display</span><span class="p">(</span><span class="n">unordered_books</span><span class="p">[[</span><span class="s1">'book_id'</span><span class="p">,</span> <span class="s1">'title'</span><span class="p">,</span> <span class="s1">'author'</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -8022,14 +9241,366 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>Mean of all elements: 52.583333333333336
-</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>book_id</th>
+<th>title</th>
+<th>author</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>Enterprise-wide coherent adapter</td>
+<td>John Bowman</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>Horizontal hybrid collaboration</td>
+<td>Holly Warren</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>Monitored intangible focus group</td>
+<td>Heather Arellano</td>
+</tr>
+<tr>
+<th>8</th>
+<td>9</td>
+<td>Multi-layered needs-based emulation</td>
+<td>Mark Jimenez</td>
+</tr>
+<tr>
+<th>11</th>
+<td>12</td>
+<td>Object-based dynamic monitoring</td>
+<td>William Oconnor</td>
+</tr>
+<tr>
+<th>13</th>
+<td>14</td>
+<td>Programmable directional portal</td>
+<td>Jennifer Wiley</td>
+</tr>
+<tr>
+<th>15</th>
+<td>16</td>
+<td>Cross-group multi-state parallelism</td>
+<td>Mark Anderson</td>
+</tr>
+<tr>
+<th>19</th>
+<td>20</td>
+<td>Sharable hybrid data-warehouse</td>
+<td>Kenneth Gardner</td>
+</tr>
+<tr>
+<th>35</th>
+<td>36</td>
+<td>Universal asymmetric migration</td>
+<td>Hannah Hendricks</td>
+</tr>
+<tr>
+<th>36</th>
+<td>37</td>
+<td>Proactive bi-directional initiative</td>
+<td>Shelley Martinez</td>
+</tr>
+<tr>
+<th>37</th>
+<td>38</td>
+<td>Total homogeneous installation</td>
+<td>Gary Woods</td>
+</tr>
+<tr>
+<th>38</th>
+<td>39</td>
+<td>Diverse 4thgeneration approach</td>
+<td>Ashley Clark</td>
+</tr>
+<tr>
+<th>42</th>
+<td>43</td>
+<td>Face-to-face explicit matrices</td>
+<td>David Schmidt</td>
+</tr>
+<tr>
+<th>45</th>
+<td>46</td>
+<td>Synchronized global emulation</td>
+<td>John Bowman</td>
+</tr>
+<tr>
+<th>55</th>
+<td>56</td>
+<td>Inverse multi-tasking definition</td>
+<td>Melissa Decker</td>
+</tr>
+<tr>
+<th>60</th>
+<td>61</td>
+<td>Open-architected 4thgeneration moderator</td>
+<td>Tyrone Taylor</td>
+</tr>
+<tr>
+<th>62</th>
+<td>63</td>
+<td>Operative optimizing time-frame</td>
+<td>Aaron Snyder</td>
+</tr>
+<tr>
+<th>73</th>
+<td>74</td>
+<td>User-friendly user-facing hub</td>
+<td>Tracey Bolton</td>
+</tr>
+<tr>
+<th>74</th>
+<td>75</td>
+<td>Ameliorated next generation paradigm</td>
+<td>Lindsey Tucker</td>
+</tr>
+<tr>
+<th>81</th>
+<td>82</td>
+<td>Multi-lateral foreground application</td>
+<td>Mrs. Michele Medina</td>
+</tr>
+<tr>
+<th>82</th>
+<td>83</td>
+<td>Networked dynamic solution</td>
+<td>Sean Bell</td>
+</tr>
+<tr>
+<th>83</th>
+<td>84</td>
+<td>Focused leadingedge flexibility</td>
+<td>Dana Diaz</td>
+</tr>
+<tr>
+<th>92</th>
+<td>93</td>
+<td>Re-engineered user-facing solution</td>
+<td>Kelly Goodwin</td>
+</tr>
+<tr>
+<th>99</th>
+<td>100</td>
+<td>Virtual 24hour benchmark</td>
+<td>John Jenkins</td>
+</tr>
+<tr>
+<th>102</th>
+<td>103</td>
+<td>Realigned asynchronous Graphic Interface</td>
+<td>Lori Leach</td>
+</tr>
+<tr>
+<th>104</th>
+<td>105</td>
+<td>Adaptive motivating core</td>
+<td>Chelsey Figueroa</td>
+</tr>
+<tr>
+<th>109</th>
+<td>110</td>
+<td>Enterprise-wide human-resource methodology</td>
+<td>Erica Johnson</td>
+</tr>
+<tr>
+<th>113</th>
+<td>114</td>
+<td>Organized well-modulated implementation</td>
+<td>Jasmine Horne</td>
+</tr>
+<tr>
+<th>114</th>
+<td>115</td>
+<td>Down-sized solution-oriented pricing structure</td>
+<td>Gregory Rogers</td>
+</tr>
+<tr>
+<th>120</th>
+<td>121</td>
+<td>Vision-oriented high-level knowledge user</td>
+<td>David Edwards</td>
+</tr>
+<tr>
+<th>122</th>
+<td>123</td>
+<td>Fully-configurable contextually-based capacity</td>
+<td>Tracy Davis</td>
+</tr>
+<tr>
+<th>123</th>
+<td>124</td>
+<td>Operative human-resource time-frame</td>
+<td>Cathy Osborn</td>
+</tr>
+<tr>
+<th>126</th>
+<td>127</td>
+<td>Operative attitude-oriented workforce</td>
+<td>Daniel Thompson</td>
+</tr>
+<tr>
+<th>133</th>
+<td>134</td>
+<td>Synergistic executive benchmark</td>
+<td>Donna Mccarthy</td>
+</tr>
+<tr>
+<th>135</th>
+<td>136</td>
+<td>Customer-focused contextually-based neural-net</td>
+<td>Alicia Lynch</td>
+</tr>
+<tr>
+<th>137</th>
+<td>138</td>
+<td>Cross-platform foreground Graphical User Inter...</td>
+<td>Dr. Randy Moran</td>
+</tr>
+<tr>
+<th>145</th>
+<td>146</td>
+<td>Team-oriented transitional process improvement</td>
+<td>Angela Brown</td>
+</tr>
+<tr>
+<th>146</th>
+<td>147</td>
+<td>Devolved methodical secured line</td>
+<td>Kristi Hicks</td>
+</tr>
+<tr>
+<th>152</th>
+<td>153</td>
+<td>Cross-platform 6thgeneration Internet solution</td>
+<td>Patricia Anderson</td>
+</tr>
+<tr>
+<th>156</th>
+<td>157</td>
+<td>Versatile intermediate Local Area Network</td>
+<td>David Curtis</td>
+</tr>
+<tr>
+<th>160</th>
+<td>161</td>
+<td>Reverse-engineered fault-tolerant groupware</td>
+<td>Steven Martinez</td>
+</tr>
+<tr>
+<th>161</th>
+<td>162</td>
+<td>Customer-focused optimizing installation</td>
+<td>Justin Lewis</td>
+</tr>
+<tr>
+<th>164</th>
+<td>165</td>
+<td>Managed empowering forecast</td>
+<td>Autumn Schmidt</td>
+</tr>
+<tr>
+<th>165</th>
+<td>166</td>
+<td>Triple-buffered clear-thinking synergy</td>
+<td>Brian Hester</td>
+</tr>
+<tr>
+<th>169</th>
+<td>170</td>
+<td>Persistent systematic capability</td>
+<td>Linda Myers</td>
+</tr>
+<tr>
+<th>174</th>
+<td>175</td>
+<td>Enhanced static hardware</td>
+<td>Lisa Gonzales</td>
+</tr>
+<tr>
+<th>175</th>
+<td>176</td>
+<td>Progressive executive secured line</td>
+<td>Valerie Butler</td>
+</tr>
+<tr>
+<th>181</th>
+<td>182</td>
+<td>Cross-platform bandwidth-monitored matrix</td>
+<td>Meghan Franklin</td>
+</tr>
+<tr>
+<th>185</th>
+<td>186</td>
+<td>Fundamental disintermediate Internet solution</td>
+<td>Adrian Fleming</td>
+</tr>
+<tr>
+<th>190</th>
+<td>191</td>
+<td>Front-line regional productivity</td>
+<td>Eric David</td>
+</tr>
+<tr>
+<th>191</th>
+<td>192</td>
+<td>Triple-buffered value-added portal</td>
+<td>Stephanie Leon</td>
+</tr>
+<tr>
+<th>192</th>
+<td>193</td>
+<td>Re-engineered foreground array</td>
+<td>Amanda Peterson</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=42bcdbcb-9c44-4e07-a15a-b7e09781a176">
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=eb771e66-5485-434b-9f91-d0279b28faa2">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-12-%E2%80%93-Splitting-the-Customer-Name-into-First-and-Last-Name">Task 12 – Splitting the Customer Name into First and Last Name<a class="anchor-link" href="#Task-12-%E2%80%93-Splitting-the-Customer-Name-into-First-and-Last-Name">¶</a></h3><p>In this task, the <code>name</code> column from the <code>customers</code> table was split into two separate columns: <code>last_name</code> and <code>first_name</code>.<br/>
+It was assumed that the original name format is <code>"LastName, FirstName"</code> (with a comma separating the two parts).</p>
+<p>The <code>.str.split()</code> function in pandas was applied with the delimiter set as comma.<br/>
+The result was expanded into two new columns using the <code>expand=True</code> argument.<br/>
+Whitespace was removed using <code>.str.strip()</code> to clean the resulting fields.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ae1682dd-d4a6-4564-be93-3030132fc487">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8037,22 +9608,23 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-InputPrompt jp-InputArea-prompt">In [12]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task4.3</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task12</span>
 
-<span class="c1"># Importing numpy library</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="c1"># Importing pandas library</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Assigning 2D list</span>
-<span class="n">arr2D</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>
+<span class="c1"># Reading customer data</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/customers.csv"</span><span class="p">)</span>
 
-<span class="c1"># Converting list to numpy array</span>
-<span class="n">np_arr2D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">arr2D</span><span class="p">)</span>
+<span class="c1"># Splitting the name by the first space only (first_name, last_name)</span>
+<span class="n">name_split</span> <span class="o">=</span> <span class="n">customers</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">' '</span><span class="p">,</span> <span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Flattening the 2D array to 1D</span>
-<span class="n">flattened</span> <span class="o">=</span> <span class="n">np_arr2D</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="c1"># Renaming the new columns</span>
+<span class="n">customers</span><span class="p">[</span><span class="s1">'first_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">customers</span><span class="p">[</span><span class="s1">'last_name'</span><span class="p">]</span> <span class="o">=</span> <span class="n">name_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="c1"># Printing result</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">flattened</span><span class="p">)</span>
+<span class="c1"># Displaying result</span>
+<span class="n">display</span><span class="p">(</span><span class="n">customers</span><span class="p">[[</span><span class="s1">'customer_id'</span><span class="p">,</span> <span class="s1">'name'</span><span class="p">,</span> <span class="s1">'first_name'</span><span class="p">,</span> <span class="s1">'last_name'</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -8064,25 +9636,132 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>[1 2 3 4 5 6]
-</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>customer_id</th>
+<th>name</th>
+<th>first_name</th>
+<th>last_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>1</td>
+<td>Hannah Townsend</td>
+<td>Townsend</td>
+<td>Hannah</td>
+</tr>
+<tr>
+<th>1</th>
+<td>2</td>
+<td>Ashley Morton</td>
+<td>Morton</td>
+<td>Ashley</td>
+</tr>
+<tr>
+<th>2</th>
+<td>3</td>
+<td>Christina Cross</td>
+<td>Cross</td>
+<td>Christina</td>
+</tr>
+<tr>
+<th>3</th>
+<td>4</td>
+<td>William Smith</td>
+<td>Smith</td>
+<td>William</td>
+</tr>
+<tr>
+<th>4</th>
+<td>5</td>
+<td>Curtis Jenkins</td>
+<td>Jenkins</td>
+<td>Curtis</td>
+</tr>
+<tr>
+<th>...</th>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+<td>...</td>
+</tr>
+<tr>
+<th>95</th>
+<td>96</td>
+<td>Patricia Frazier</td>
+<td>Frazier</td>
+<td>Patricia</td>
+</tr>
+<tr>
+<th>96</th>
+<td>97</td>
+<td>Jennifer Gordon</td>
+<td>Gordon</td>
+<td>Jennifer</td>
+</tr>
+<tr>
+<th>97</th>
+<td>98</td>
+<td>Christopher Martinez</td>
+<td>Martinez</td>
+<td>Christopher</td>
+</tr>
+<tr>
+<th>98</th>
+<td>99</td>
+<td>Shane Nichols</td>
+<td>Nichols</td>
+<td>Shane</td>
+</tr>
+<tr>
+<th>99</th>
+<td>100</td>
+<td>Kevin Wilson</td>
+<td>Wilson</td>
+<td>Kevin</td>
+</tr>
+</tbody>
+</table>
+<p>100 rows × 4 columns</p>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=549a178e-e5dd-48e8-a34d-046907a7cc99">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=d4e4bd90-2707-4b85-a0b3-829e91c37559">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="5.-Python-Pandas">5. Python Pandas<a class="anchor-link" href="#5.-Python-Pandas">¶</a></h2>
+<h3 id="Task-13-%E2%80%93-Adding-a-New-Customer-and-an-Associated-Order">Task 13 – Adding a New Customer and an Associated Order<a class="anchor-link" href="#Task-13-%E2%80%93-Adding-a-New-Customer-and-an-Associated-Order">¶</a></h3><p>In this task, a new customer was created and added to the <code>customers</code> table,<br/>
+followed by the creation of a new order placed by this customer.</p>
+<p>A new row was manually defined for the customer, including attributes such as name, email, and phone number.<br/>
+Afterward, a new order was added to the <code>orders</code> table by referencing the newly added customer and selecting an existing book.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=ead8ddf9-89c8-4cc4-a4fc-493380e9779e">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=b67f35f0-c10a-4685-ada2-f19dd94f4ba8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8090,23 +9769,45 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-InputPrompt jp-InputArea-prompt">In [13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task5.1</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task13</span>
 
-<span class="c1">#Importing pandas library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Creating dictionary </span>
-<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"Brand"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Toyota"</span><span class="p">,</span> <span class="s2">"Ford"</span><span class="p">,</span> <span class="s2">"BMW"</span><span class="p">,</span> <span class="s2">"Fiat"</span><span class="p">,</span> <span class="s2">"Hyundai"</span><span class="p">],</span>
-    <span class="s2">"Country"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"Japan"</span><span class="p">,</span> <span class="s2">"USA"</span><span class="p">,</span> <span class="s2">"Germany"</span><span class="p">,</span> <span class="s2">"Italy"</span><span class="p">,</span> <span class="s2">"South Korea"</span><span class="p">],</span>
-    <span class="s2">"Year"</span><span class="p">:</span> <span class="p">[</span><span class="mi">1937</span><span class="p">,</span> <span class="mi">1903</span><span class="p">,</span> <span class="mi">1916</span><span class="p">,</span> <span class="mi">1899</span><span class="p">,</span> <span class="mi">1967</span><span class="p">]</span>
+<span class="c1"># Reading original datasets</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/customers.csv"</span><span class="p">)</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/orders.csv"</span><span class="p">)</span>
+
+<span class="c1"># Creating a new customer row</span>
+<span class="n">new_customer</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'customer_id'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">'name'</span><span class="p">:</span> <span class="s1">'Musterman, Max'</span><span class="p">,</span>
+    <span class="s1">'email'</span><span class="p">:</span> <span class="s1">'max.musterman@example.com'</span><span class="p">,</span>
+    <span class="s1">'phone'</span><span class="p">:</span> <span class="s1">'123-456-7890'</span>
 <span class="p">}</span>
 
-<span class="c1"># Converting dictionary to DF</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="c1"># Appending the new customer to the customers DataFrame</span>
+<span class="n">customers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">customers</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_customer</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-<span class="c1"># Printing result</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1"># Creating a new order for the new customer</span>
+<span class="n">new_order</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">'order_id'</span><span class="p">:</span> <span class="mi">301</span><span class="p">,</span>
+    <span class="s1">'order_date'</span><span class="p">:</span> <span class="s1">'03.08.25'</span><span class="p">,</span>
+    <span class="s1">'customer_id'</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">'book_id'</span><span class="p">:</span> <span class="mi">122</span><span class="p">,</span>
+    <span class="s1">'quantity'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s1">'total_price'</span><span class="p">:</span> <span class="mf">19.99</span><span class="p">,</span>
+    <span class="s1">'payment_method'</span><span class="p">:</span> <span class="s1">'card'</span>
+<span class="p">}</span>
+
+<span class="c1"># Appending the new order to the orders DataFrame</span>
+<span class="n">orders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">orders</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">new_order</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Displaying the newly added rows</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">"New customer added:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">customers</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">"New order added:"</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">orders</span><span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -8119,18 +9820,119 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>     Brand      Country  Year
-0   Toyota        Japan  1937
-1     Ford          USA  1903
-2      BMW      Germany  1916
-3     Fiat        Italy  1899
-4  Hyundai  South Korea  1967
+<pre>New customer added:
 </pre>
 </div>
 </div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>customer_id</th>
+<th>name</th>
+<th>email</th>
+<th>phone</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>100</th>
+<td>100</td>
+<td>Musterman, Max</td>
+<td>max.musterman@example.com</td>
+<td>123-456-7890</td>
+</tr>
+</tbody>
+</table>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=a7698fc9-2ae3-4579-9464-b52a4630861e">
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
+<pre>New order added:
+</pre>
+</div>
+</div>
+<div class="jp-OutputArea-child">
+<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>order_id</th>
+<th>order_date</th>
+<th>customer_id</th>
+<th>book_id</th>
+<th>quantity</th>
+<th>payment_method</th>
+<th>total_price</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>300</th>
+<td>301</td>
+<td>03.08.25</td>
+<td>100</td>
+<td>122</td>
+<td>1</td>
+<td>card</td>
+<td>19.99</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=62827a6b-3f9c-43c5-8963-81ff3caec47a">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h3 id="Task-14-%E2%80%93-Listing-All-Books-Written-by-'J.K.-Rowling'">Task 14 – Listing All Books Written by 'J.K. Rowling'<a class="anchor-link" href="#Task-14-%E2%80%93-Listing-All-Books-Written-by-'J.K.-Rowling'">¶</a></h3><p>In this part of the task, the <code>books</code> table was filtered to include only those rows<br/>
+where the <code>author</code> column matched <code>'J.K. Rowling'</code>.</p>
+<p>After filtering, only the <code>title</code> column was selected to display the names of the books.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=31f5c14c-393e-4d6e-8c37-ac81ec2196a8">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8138,32 +9940,19 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-InputPrompt jp-InputArea-prompt">In [14]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task5.2</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task14</span>
 
 <span class="c1"># Importing pandas library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Importing the CSV file</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"employees.csv"</span><span class="p">)</span>
+<span class="c1"># Reading books dataset</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
 
-<span class="c1"># Displaying the first few rows</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"First few rows:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+<span class="c1"># Filtering books written by 'J.K. Rowling'</span>
+<span class="n">rowling_books</span> <span class="o">=</span> <span class="n">books</span><span class="p">[</span><span class="n">books</span><span class="p">[</span><span class="s1">'author'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'J.K. Rowling'</span><span class="p">]</span>
 
-<span class="c1"># Checking the number of rows and columns</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> Shape (rows, columns):"</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-
-<span class="c1"># Geting descriptive statistics</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> Descriptive statistics:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">(</span><span class="n">include</span><span class="o">=</span><span class="s1">'all'</span><span class="p">))</span>
-
-<span class="c1"># Displaying the column names</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> Column names:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="o">.</span><span class="n">tolist</span><span class="p">())</span>
-
-<span class="c1"># Getting info about the data frame</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2"> DataFrame info:"</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
+<span class="c1"># Displaying only the book titles</span>
+<span class="n">display</span><span class="p">(</span><span class="n">rowling_books</span><span class="p">[[</span><span class="s1">'title'</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -8175,93 +9964,53 @@ Values in the child dictionaries: The actual information about the book (title a
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>First few rows:
-   EMPLOYEE_ID FIRST_NAME  LAST_NAME     EMAIL  PHONE_NUMBER  HIRE_DATE  \
-0          198     Donald   OConnell  DOCONNEL  650.507.9833  21-JUN-07   
-1          199    Douglas      Grant    DGRANT  650.507.9844  13-JAN-08   
-2          200   Jennifer     Whalen   JWHALEN  515.123.4444  17-SEP-03   
-3          201    Michael  Hartstein  MHARTSTE  515.123.5555  17-FEB-04   
-4          202        Pat        Fay      PFAY  603.123.6666  17-AUG-05   
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
-     JOB_ID  SALARY COMMISSION_PCT MANAGER_ID  DEPARTMENT_ID  
-0  SH_CLERK    2600             -         124             50  
-1  SH_CLERK    2600             -         124             50  
-2   AD_ASST    4400             -         101             10  
-3    MK_MAN   13000             -         100             20  
-4    MK_REP    6000             -         201             20  
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
 
- Shape (rows, columns): (50, 11)
-
- Descriptive statistics:
-        EMPLOYEE_ID FIRST_NAME LAST_NAME     EMAIL  PHONE_NUMBER  HIRE_DATE  \
-count     50.000000         50        50        50            50         50   
-unique          NaN         45        50        50            50         47   
-top             NaN    Michael  OConnell  DOCONNEL  650.507.9833  07-JUN-02   
-freq            NaN          2         1         1             1          4   
-mean     134.760000        NaN       NaN       NaN           NaN        NaN   
-std       33.631594        NaN       NaN       NaN           NaN        NaN   
-min      100.000000        NaN       NaN       NaN           NaN        NaN   
-25%      112.250000        NaN       NaN       NaN           NaN        NaN   
-50%      124.500000        NaN       NaN       NaN           NaN        NaN   
-75%      136.750000        NaN       NaN       NaN           NaN        NaN   
-max      206.000000        NaN       NaN       NaN           NaN        NaN   
-
-          JOB_ID        SALARY COMMISSION_PCT MANAGER_ID  DEPARTMENT_ID  
-count         50     50.000000             50         50       50.00000  
-unique        17           NaN              1         14            NaN  
-top     ST_CLERK           NaN             -         100            NaN  
-freq          16           NaN             50          9            NaN  
-mean         NaN   6182.320000            NaN        NaN       57.60000  
-std          NaN   4586.181772            NaN        NaN       25.11687  
-min          NaN   2100.000000            NaN        NaN       10.00000  
-25%          NaN   2725.000000            NaN        NaN       50.00000  
-50%          NaN   4600.000000            NaN        NaN       50.00000  
-75%          NaN   8150.000000            NaN        NaN       60.00000  
-max          NaN  24000.000000            NaN        NaN      110.00000  
-
- Column names:
-['EMPLOYEE_ID', 'FIRST_NAME', 'LAST_NAME', 'EMAIL', 'PHONE_NUMBER', 'HIRE_DATE', 'JOB_ID', 'SALARY', 'COMMISSION_PCT', 'MANAGER_ID', 'DEPARTMENT_ID']
-
- DataFrame info:
-&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 50 entries, 0 to 49
-Data columns (total 11 columns):
- #   Column          Non-Null Count  Dtype 
----  ------          --------------  ----- 
- 0   EMPLOYEE_ID     50 non-null     int64 
- 1   FIRST_NAME      50 non-null     object
- 2   LAST_NAME       50 non-null     object
- 3   EMAIL           50 non-null     object
- 4   PHONE_NUMBER    50 non-null     object
- 5   HIRE_DATE       50 non-null     object
- 6   JOB_ID          50 non-null     object
- 7   SALARY          50 non-null     int64 
- 8   COMMISSION_PCT  50 non-null     object
- 9   MANAGER_ID      50 non-null     object
- 10  DEPARTMENT_ID   50 non-null     int64 
-dtypes: int64(3), object(8)
-memory usage: 4.4+ KB
-None
-</pre>
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>title</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
 </div>
 </div>
 </div>
 </div>
 </div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=7ab63dc2-24ab-4e3f-aecf-d51019ad2cfc">
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=793c563a-4f2e-43b6-b620-030cf8d077cd">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="5.3">5.3<a class="anchor-link" href="#5.3">¶</a></h3><p>The rest of the dataset is comma-separated, but 9. row uses semicolons (;):</p>
-<p>9  1010; 510; 10/01/2023; 100;Book         NaN             NaN     NaN       NaN</p>
-<p>Actually, this error can be corrected manually or in code, because this dataset is just one row, but if there is only a few row in the big data, it is best to delete these rows.</p>
+<h3 id="Task-15-%E2%80%93-Restructuring-the-Book-Category-Relationship-(Many-to-Many)">Task 15 – Restructuring the Book-Category Relationship (Many-to-Many)<a class="anchor-link" href="#Task-15-%E2%80%93-Restructuring-the-Book-Category-Relationship-(Many-to-Many)">¶</a></h3><p>Originally, each book in the system was associated with only one category using a <code>category_id</code> field within the <code>books</code> table.<br/>
+While this simplified the database schema, it failed to reflect real-world complexity where books can belong to multiple genres.</p>
+<p>To resolve this limitation, the data model was restructured by introducing a new intermediate table: <code>book_categories</code>.<br/>
+This new table allows for a many-to-many relationship between books and categories by storing pairs of <code>book_id</code> and <code>category_id</code>.</p>
+<p>In order to test the revised structure, three books written by 'J.K. Rowling' were added and linked to multiple categories.<br/>
+Specifically, each of her books was associated with both the 'Fiction' and 'Mystery' categories.</p>
 </div>
 </div>
 </div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=02d4b2e4-89b8-4f33-8054-8015816b7aaa">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=9f7878cb-3d12-4335-8a24-dc1d5e1afcba">
 <div class="jp-Cell-inputWrapper" tabindex="0">
 <div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
 </div>
@@ -8269,139 +10018,47 @@ None
 <div class="jp-InputPrompt jp-InputArea-prompt">In [15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task5.3</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># task15</span>
 
 <span class="c1"># Importing pandas library</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
 
-<span class="c1"># Importing the CSV file</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"transactions.csv"</span><span class="p">)</span>
+<span class="c1"># Load raw data</span>
+<span class="n">categories</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/categories.csv"</span><span class="p">)</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"data/books.csv"</span><span class="p">)</span>
 
-<span class="c1"># Cheking null values</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
-
-<span class="c1"># Remove missing values.</span>
-<span class="n">df_clean</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-
-<span class="c1"># Printing result</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df_clean</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 10 entries, 0 to 9
-Data columns (total 5 columns):
- #   Column           Non-Null Count  Dtype  
----  ------           --------------  -----  
- 0   TransactionID    10 non-null     object 
- 1   CustomerID       9 non-null      float64
- 2   TransactionDate  9 non-null      object 
- 3   Amount           9 non-null      float64
- 4   Product          9 non-null      object 
-dtypes: float64(2), object(3)
-memory usage: 532.0+ bytes
-None
-  TransactionID  CustomerID TransactionDate  Amount   Product
-0          1001       501.0      01/01/2023   150.0      Book
-1          1002       502.0      02/01/2023    75.0       Pen
-2          1003       503.0      03/01/2023   200.0  Notebook
-3          1004       504.0      04/01/2023   120.0      Book
-4          1005       505.0      05/01/2023    50.0       Pen
-5          1006       506.0      06/01/2023   180.0  Notebook
-6          1007       507.0      07/01/2023   300.0      Book
-7          1008       508.0      08/01/2023    90.0       Pen
-8          1009       509.0      09/01/2023   250.0  Notebook
-</pre>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell" id="cell-id=c958a7a9-05db-4262-9b04-3b7d007f4dcd">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="5.4">5.4<a class="anchor-link" href="#5.4">¶</a></h3><h4 id="At-least-3-issues-regarding-dataset:">At least 3 issues regarding dataset:<a class="anchor-link" href="#At-least-3-issues-regarding-dataset:">¶</a></h4><p>There are duplicate rows that need to be removed.
-Some rows have zero values in the value column, which should be cleaned out.
-The quantity column contains non-numeric text values that must be fixed or removed.
-There are missing values (NaNs) that need to be dropped for clean data.
-After removing row, indexing should be fix.
-Column types are error-prone.</p>
-<h4 id="Cleaning-dataset">Cleaning dataset<a class="anchor-link" href="#Cleaning-dataset">¶</a></h4><p>Firstly removed duplicate rows to keep only unique entries.
-Secondly, filtered out rows where the value column is zero.
-Converted the quantity column to numbers, turning invalid text into NaN, then removes those rows.
-Dropped all rows that contain any missing (NaN) values.</p>
-<p>Finally, reseted the index and changes columns to their appropriate data types for better efficiency and accuracy.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell" id="cell-id=85e5f904-a679-42d3-9707-3c682b188406">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [16]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1">## task5.4</span>
-
-<span class="c1"># Importing pandas library</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
-
-<span class="c1"># Importing the CSV file</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"inventory.csv"</span><span class="p">)</span>
-
-<span class="c1"># Cheking null values</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
-
-<span class="c1"># Cleaning duplicates</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">()</span>
-
-<span class="c1"># Cleaning 0 values in value column</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'value'</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">]</span>
-
-<span class="c1"># Cleaning non numeric values in quantity column</span>
-<span class="n">df</span><span class="p">[</span><span class="s1">'quantity'</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">'quantity'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'coerce'</span><span class="p">)</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'quantity'</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"AA"</span><span class="p">]</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'quantity'</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"BB"</span><span class="p">]</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="p">[</span><span class="s1">'quantity'</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">"CC"</span><span class="p">]</span>
-
-<span class="c1"># Cleaning NaN values from df</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span> 
-
-<span class="c1"># Cleaning index after deletions</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># Converting to appropriate types</span>
-<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">astype</span><span class="p">({</span>
-    <span class="s1">'product.partNumber'</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">,</span>
-    <span class="s1">'location.locationIdentifier'</span><span class="p">:</span> <span class="s1">'string'</span><span class="p">,</span>
-    <span class="s1">'inventoryType'</span><span class="p">:</span> <span class="s1">'category'</span><span class="p">,</span>
-    <span class="s1">'quantity'</span><span class="p">:</span> <span class="s1">'int'</span><span class="p">,</span>
-    <span class="s1">'quantityUnits'</span><span class="p">:</span> <span class="s1">'category'</span><span class="p">,</span>
-    <span class="s1">'value'</span><span class="p">:</span> <span class="s1">'float'</span><span class="p">,</span>
-    <span class="s1">'valueCurrency'</span><span class="p">:</span> <span class="s1">'category'</span><span class="p">,</span>
-    <span class="s1">'plannerCode'</span><span class="p">:</span> <span class="s1">'category'</span><span class="p">,</span>
-    <span class="s1">'velocityCode'</span><span class="p">:</span> <span class="s1">'category'</span><span class="p">,</span>
-    <span class="s1">'inventoryParentType'</span><span class="p">:</span> <span class="s1">'category'</span><span class="p">,</span>
-    <span class="s1">'class'</span><span class="p">:</span> <span class="s1">'category'</span><span class="p">,</span>
-    <span class="s1">'segment'</span><span class="p">:</span> <span class="s1">'category'</span>
+<span class="c1"># Creating J.K. Rowling test books</span>
+<span class="n">rowling_books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'book_id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">901</span><span class="p">,</span> <span class="mi">902</span><span class="p">,</span> <span class="mi">903</span><span class="p">],</span>
+    <span class="s1">'title'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'The Ickabog'</span><span class="p">,</span> <span class="s1">'Troubled Blood'</span><span class="p">,</span> <span class="s1">'The Casual Vacancy'</span><span class="p">],</span>
+    <span class="s1">'author'</span><span class="p">:</span> <span class="p">[</span><span class="s1">'J.K. Rowling'</span><span class="p">]</span> <span class="o">*</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s1">'price'</span><span class="p">:</span> <span class="p">[</span><span class="mf">14.99</span><span class="p">,</span> <span class="mf">18.50</span><span class="p">,</span> <span class="mf">16.00</span><span class="p">]</span>
 <span class="p">})</span>
 
-<span class="c1"># Printing result</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">info</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">to_string</span><span class="p">())</span>
+<span class="c1"># Appending test books to the books DataFrame</span>
+<span class="n">books</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">books</span><span class="p">,</span> <span class="n">rowling_books</span><span class="p">],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Creating a new many-to-many book_categories table:</span>
+<span class="c1"># Each Rowling book will be linked to Fiction (1) and Mystery (5)</span>
+<span class="n">book_categories</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">'book_id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">901</span><span class="p">,</span> <span class="mi">901</span><span class="p">,</span> <span class="mi">902</span><span class="p">,</span> <span class="mi">902</span><span class="p">,</span> <span class="mi">903</span><span class="p">,</span> <span class="mi">903</span><span class="p">],</span>
+    <span class="s1">'category_id'</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="p">})</span>
+
+<span class="c1"># Filtering books written by 'J.K. Rowling'</span>
+<span class="n">rowling_books</span> <span class="o">=</span> <span class="n">books</span><span class="p">[</span><span class="n">books</span><span class="p">[</span><span class="s1">'author'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'J.K. Rowling'</span><span class="p">]</span>
+
+<span class="c1"># Dropping category_id from dateset cause of future conflicts</span>
+<span class="n">rowling_books</span> <span class="o">=</span> <span class="n">rowling_books</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">'category_id'</span><span class="p">],</span> <span class="n">errors</span><span class="o">=</span><span class="s1">'ignore'</span><span class="p">)</span>
+
+<span class="c1"># Merging Rowling books with book_categories</span>
+<span class="n">rowling_books_with_categories</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">rowling_books</span><span class="p">,</span> <span class="n">book_categories</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'book_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Merging with categories to get category names</span>
+<span class="n">rowling_books_full</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">rowling_books_with_categories</span><span class="p">,</span> <span class="n">categories</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">'category_id'</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">'left'</span><span class="p">)</span>
+
+<span class="c1"># Displaying only Rowling books with their categories</span>
+<span class="n">display</span><span class="p">(</span><span class="n">rowling_books_full</span><span class="p">[[</span><span class="s1">'book_id'</span><span class="p">,</span> <span class="s1">'title'</span><span class="p">,</span> <span class="s1">'category_name'</span><span class="p">]])</span>
 </pre></div>
 </div>
 </div>
@@ -8413,118 +10070,70 @@ Dropped all rows that contain any missing (NaN) values.</p>
 <div class="jp-OutputArea jp-Cell-outputArea">
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain" tabindex="0">
-<pre>&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 81 entries, 0 to 80
-Data columns (total 12 columns):
- #   Column                       Non-Null Count  Dtype  
----  ------                       --------------  -----  
- 0   product.partNumber           81 non-null     object 
- 1   location.locationIdentifier  81 non-null     object 
- 2   inventoryType                81 non-null     object 
- 3   quantity                     81 non-null     object 
- 4   quantityUnits                81 non-null     object 
- 5   value                        76 non-null     float64
- 6   valueCurrency                81 non-null     object 
- 7   plannerCode                  81 non-null     object 
- 8   velocityCode                 81 non-null     object 
- 9   inventoryParentType          81 non-null     object 
- 10  class                        81 non-null     object 
- 11  segment                      81 non-null     object 
-dtypes: float64(1), object(11)
-memory usage: 7.7+ KB
-None
-&lt;class 'pandas.core.frame.DataFrame'&gt;
-RangeIndex: 69 entries, 0 to 68
-Data columns (total 12 columns):
- #   Column                       Non-Null Count  Dtype   
----  ------                       --------------  -----   
- 0   product.partNumber           69 non-null     string  
- 1   location.locationIdentifier  69 non-null     string  
- 2   inventoryType                69 non-null     category
- 3   quantity                     69 non-null     int64   
- 4   quantityUnits                69 non-null     category
- 5   value                        69 non-null     float64 
- 6   valueCurrency                69 non-null     category
- 7   plannerCode                  69 non-null     category
- 8   velocityCode                 69 non-null     category
- 9   inventoryParentType          69 non-null     category
- 10  class                        69 non-null     category
- 11  segment                      69 non-null     category
-dtypes: category(8), float64(1), int64(1), string(2)
-memory usage: 4.0 KB
-None
-   product.partNumber location.locationIdentifier inventoryType  quantity quantityUnits    value valueCurrency           plannerCode velocityCode inventoryParentType class     segment
-0          PS-SL-A287                        LT-1       PRODUCT        25            EA  31250.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-1          PS-SL-A288                        LT-1       PRODUCT        20            EA  25000.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-2          PS-SL-H310                        LT-1       PRODUCT        35            EA  43750.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-3          PS-SL-F343                        LT-1       PRODUCT        49            EA  61250.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-4          PS-SL-F344                        LT-1       PRODUCT         7            EA   8750.0           USD       Street Lighting            C              ONHAND   NEW  INDUSTRIAL
-5          PS-SL-F345                        LT-1       PRODUCT        40            EA  50000.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-6          PS-SL-B122                        LT-1       PRODUCT        16            EA  20000.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-7          PS-SL-C280                        LT-1       PRODUCT        42            EA  52500.0           USD       Street Lighting            C              ONHAND   NEW  INDUSTRIAL
-8          PS-SL-C193                        LT-1       PRODUCT        49            EA  61250.0           USD       Street Lighting            C              ONHAND   NEW  INDUSTRIAL
-9          PS-SL-L327                        LT-1       PRODUCT        30            EA  37500.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-10         PS-SL-L393                        LT-1       PRODUCT         4            EA   5000.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-11         PS-PL-C167                        LT-1       PRODUCT        15            EA  18750.0           USD   Pedestrian Lighting            C              ONHAND   NEW  INDUSTRIAL
-12         PS-PL-S459                        LT-1       PRODUCT        40            EA  50000.0           USD   Pedestrian Lighting            C              ONHAND   NEW  INDUSTRIAL
-13         PS-PL-S236                        LT-1       PRODUCT        29            EA  36250.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-14         PS-PL-F206                        LT-1       PRODUCT        16            EA  20000.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-15         PS-PL-F158                        LT-1       PRODUCT         8            EA  10000.0           USD   Pedestrian Lighting            C              ONHAND   NEW  INDUSTRIAL
-16         PS-PL-F242                        LT-1       PRODUCT         6            EA   7500.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-17         PS-PL-W140                        LT-1       PRODUCT        11            EA  13750.0           USD   Pedestrian Lighting            A              ONHAND   NEW  INDUSTRIAL
-18         PS-PL-W381                        LT-1       PRODUCT        18            EA  22500.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-19         PS-PL-R186                        LT-1       PRODUCT        39            EA  48750.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-20         PS-TS-T264                        LT-1       PRODUCT        36            EA  52200.0           USD  Traffic Signal Poles            C              ONHAND   NEW  INDUSTRIAL
-21         PS-TS-A318                        LT-1       PRODUCT        14            EA  20300.0           USD  Traffic Signal Poles            C              ONHAND   NEW  INDUSTRIAL
-22         CO-CO-N311                        LT-1       PRODUCT       124            EA  31000.0           USD              Controls            A              ONHAND   NEW  INDUSTRIAL
-23         CO-CO-M328                        LT-1       PRODUCT       214            EA  26750.0           USD              Controls            A              ONHAND   NEW  INDUSTRIAL
-24         CO-DL-T316                        LT-1       PRODUCT        50            EA   2750.0           USD            Downlights            B              ONHAND   NEW  INDUSTRIAL
-25         CO-DL-A239                        LT-1       PRODUCT       103            EA   4944.0           USD            Downlights            B              ONHAND   NEW  INDUSTRIAL
-26         CO-DL-A230                        LT-1       PRODUCT       148            EA   7548.0           USD            Downlights            B              ONHAND   NEW  INDUSTRIAL
-27         CO-RD-I380                        LT-1       PRODUCT       168            EA  13104.0           USD   Retrofit Downlights            C              ONHAND   NEW  INDUSTRIAL
-28         CO-RD-S282                        LT-1       PRODUCT       352            EA  30976.0           USD   Retrofit Downlights            B              ONHAND   NEW  INDUSTRIAL
-29         CO-RD-R296                        LT-1       PRODUCT       162            EA  15066.0           USD   Retrofit Downlights            A              ONHAND   NEW  INDUSTRIAL
-30         CO-AM-B209                        LT-1       PRODUCT        88            EA  10560.0           USD               Ambient            A              ONHAND   NEW  INDUSTRIAL
-31         CO-AM-S185                        LT-1       PRODUCT       242            EA  69938.0           USD               Ambient            B              ONHAND   NEW  INDUSTRIAL
-32         CO-AM-S393                        LT-1       PRODUCT        89            EA  16287.0           USD               Ambient            C              ONHAND   NEW  INDUSTRIAL
-33         PS-SL-A287                        LT-2       PRODUCT        47            EA  58750.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-34         PS-SL-A288                        LT-2       PRODUCT        45            EA  56250.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-35         PS-SL-H309                        LT-2       PRODUCT        35            EA  43750.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-36         PS-SL-H310                        LT-2       PRODUCT        19            EA  23750.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-37         PS-SL-F342                        LT-2       PRODUCT        34            EA  42500.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-38         PS-SL-F343                        LT-2       PRODUCT        43            EA  53750.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-39         PS-SL-F344                        LT-2       PRODUCT        10            EA  12500.0           USD       Street Lighting            C              ONHAND   NEW  INDUSTRIAL
-40         PS-SL-F345                        LT-2       PRODUCT        33            EA  41250.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-41         PS-SL-B122                        LT-2       PRODUCT        32            EA  40000.0           USD       Street Lighting            C              ONHAND   NEW  INDUSTRIAL
-42         PS-SL-A123                        LT-2       PRODUCT        31            EA  38750.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-43         PS-SL-C280                        LT-2       PRODUCT         2            EA   2500.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-44         PS-SL-C193                        LT-2       PRODUCT        41            EA  51250.0           USD       Street Lighting            A              ONHAND   NEW  INDUSTRIAL
-45         PS-SL-L393                        LT-2       PRODUCT        15            EA  18750.0           USD       Street Lighting            C              ONHAND   NEW  INDUSTRIAL
-46         PS-PL-C295                        LT-2       PRODUCT        44            EA  55000.0           USD   Pedestrian Lighting            A              ONHAND   NEW  INDUSTRIAL
-47         PS-PL-C167                        LT-2       PRODUCT        41            EA  51250.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-48         PS-PL-S459                        LT-2       PRODUCT        39            EA  48750.0           USD   Pedestrian Lighting            A              ONHAND   NEW  INDUSTRIAL
-49         PS-PL-S236                        LT-2       PRODUCT        23            EA  28750.0           USD   Pedestrian Lighting            C              ONHAND   NEW  INDUSTRIAL
-50         PS-PL-F206                        LT-2       PRODUCT        38            EA  47500.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-51         PS-PL-F242                        LT-2       PRODUCT         6            EA   7500.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-52         PS-PL-F388                        LT-2       PRODUCT        32            EA  40000.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-53         PS-PL-W140                        LT-2       PRODUCT        40            EA  50000.0           USD   Pedestrian Lighting            A              ONHAND   NEW  INDUSTRIAL
-54         PS-PL-W381                        LT-2       PRODUCT        16            EA  20000.0           USD   Pedestrian Lighting            B              ONHAND   NEW  INDUSTRIAL
-55         PS-PL-R186                        LT-2       PRODUCT        38            EA  47500.0           USD   Pedestrian Lighting            A              ONHAND   NEW  INDUSTRIAL
-56         PS-TS-T264                        LT-2       PRODUCT        45            EA  65250.0           USD  Traffic Signal Poles            A              ONHAND   NEW  INDUSTRIAL
-57         CO-CO-V310                        LT-2       PRODUCT        59            EA   5900.0           USD              Controls            C              ONHAND   NEW  INDUSTRIAL
-58         CO-CO-N311                        LT-2       PRODUCT       256            EA  64000.0           USD              Controls            A              ONHAND   NEW  INDUSTRIAL
-59         CO-CO-M328                        LT-2       PRODUCT       230            EA  28750.0           USD              Controls            B              ONHAND   NEW  INDUSTRIAL
-60         CO-DL-T316                        LT-2       PRODUCT       270            EA  14850.0           USD            Downlights            B              ONHAND   NEW  INDUSTRIAL
-61         CO-DL-A239                        LT-2       PRODUCT       222            EA  10656.0           USD            Downlights            B              ONHAND   NEW  INDUSTRIAL
-62         CO-DL-A230                        LT-2       PRODUCT       125            EA   6375.0           USD            Downlights            C              ONHAND   NEW  INDUSTRIAL
-63         CO-RD-I380                        LT-2       PRODUCT       189            EA  14742.0           USD   Retrofit Downlights            C              ONHAND   NEW  INDUSTRIAL
-64         CO-RD-S282                        LT-2       PRODUCT       388            EA  34144.0           USD   Retrofit Downlights            B              ONHAND   NEW  INDUSTRIAL
-65         CO-AM-B209                        LT-2       PRODUCT       384            EA  46080.0           USD               Ambient            A              ONHAND   NEW  INDUSTRIAL
-66         CO-AM-S185                        LT-2       PRODUCT       303            EA  87567.0           USD               Ambient            C              ONHAND   NEW  INDUSTRIAL
-67         CO-AM-S393                        LT-2       PRODUCT       222            EA  40626.0           USD               Ambient            C              ONHAND   NEW  INDUSTRIAL
-68         PS-SL-A123                        LT-1       PRODUCT        15            EA  18750.0           USD       Street Lighting            B              ONHAND   NEW  INDUSTRIAL
-</pre>
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
+<div>
+<style scoped="">
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+<thead>
+<tr style="text-align: right;">
+<th></th>
+<th>book_id</th>
+<th>title</th>
+<th>category_name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<th>0</th>
+<td>901</td>
+<td>The Ickabog</td>
+<td>Fiction</td>
+</tr>
+<tr>
+<th>1</th>
+<td>901</td>
+<td>The Ickabog</td>
+<td>Mystery</td>
+</tr>
+<tr>
+<th>2</th>
+<td>902</td>
+<td>Troubled Blood</td>
+<td>Fiction</td>
+</tr>
+<tr>
+<th>3</th>
+<td>902</td>
+<td>Troubled Blood</td>
+<td>Mystery</td>
+</tr>
+<tr>
+<th>4</th>
+<td>903</td>
+<td>The Casual Vacancy</td>
+<td>Fiction</td>
+</tr>
+<tr>
+<th>5</th>
+<td>903</td>
+<td>The Casual Vacancy</td>
+<td>Mystery</td>
+</tr>
+</tbody>
+</table>
+</div>
 </div>
 </div>
 </div>
