@@ -8102,26 +8102,26 @@ T-test p-value: 0.46999185834323043
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 id="Task-2.2:-Profit-Differences-Between-Smartphone-And-Other-Gadget-Types">Task 2.2: Profit Differences Between Smartphone And Other Gadget Types<a class="anchor-link" href="#Task-2.2:-Profit-Differences-Between-Smartphone-And-Other-Gadget-Types">¶</a></h3><h4 id="Hypotheses">Hypotheses<a class="anchor-link" href="#Hypotheses">¶</a></h4><ul>
-<li><strong>Null Hypothesis (H₀):</strong> There is no significant difference in profit among the three gadget types.</li>
-<li><strong>Alternative Hypothesis (H₁):</strong> There is a significant difference in profit among at least two gadget types.</li>
+<li><strong>Null Hypothesis (H₀):</strong> There is no significant difference in profit between Smartphones and other gadget types.</li>
+<li><strong>Alternative Hypothesis (H₁):</strong> There is a significant difference in profit between Smartphones and other gadget types.</li>
 </ul>
 <h4 id="Data-Preparation">Data Preparation<a class="anchor-link" href="#Data-Preparation">¶</a></h4><ul>
 <li>Rows with missing values in <code>Profit</code> or <code>Gadget Type</code> were removed.</li>
-<li><code>Profit</code> values were grouped by <code>Gadget Type</code>: <strong>Tablet</strong>, <strong>Laptop</strong>, and <strong>Smartphone</strong>.</li>
+<li>A <code>Gadget Group</code> column was created: <strong>Smartphone</strong> vs <strong>Other</strong> (Tablet and Laptop).</li>
 </ul>
 <h4 id="Levene%E2%80%99s-Test-for-Homogeneity-of-Variance">Levene’s Test for Homogeneity of Variance<a class="anchor-link" href="#Levene%E2%80%99s-Test-for-Homogeneity-of-Variance">¶</a></h4><ul>
-<li>Levene’s Test was performed to assess whether the variance in profits is equal across the three groups.</li>
+<li>Levene’s Test was performed to assess whether the variance in profits is equal across the two groups.</li>
 <li><strong>Result</strong>: p-value = <strong>5.41 × 10⁻³⁰</strong> → p &lt; 0.05</li>
 <li>The assumption of equal variances is <strong>violated</strong>.</li>
 </ul>
-<h4 id="Welch%E2%80%99s-ANOVA-Results">Welch’s ANOVA Results<a class="anchor-link" href="#Welch%E2%80%99s-ANOVA-Results">¶</a></h4><ul>
-<li>Welch’s ANOVA was applied since the assumption of equal variances was not met.</li>
-<li><strong>Test statistic</strong>: 6.77</li>
+<h4 id="Welch%E2%80%99s-T-Test-Results">Welch’s T-Test Results<a class="anchor-link" href="#Welch%E2%80%99s-T-Test-Results">¶</a></h4><ul>
+<li>Welch’s t-test (independent t-test with <code>equal_var=False</code>) was applied since the assumption of equal variances was not met.</li>
+<li><strong>t-statistic</strong>: 6.77</li>
 <li><strong>p-value</strong>: <strong>1.69 × 10⁻¹¹</strong> → p &lt; 0.05</li>
 </ul>
 <h4 id="Conclusion">Conclusion<a class="anchor-link" href="#Conclusion">¶</a></h4><p>Since the p-value is significantly less than 0.05, we <strong>reject the null hypothesis</strong>.<br/>
-There is a <strong>statistically significant difference in profit</strong> among at least two gadget types.<br/>
-This indicates that the type of gadget (Tablet, Laptop, or Smartphone) has a meaningful impact on the profit generated.</p>
+There is a <strong>statistically significant difference in profit</strong> between Smartphones and other gadget types.<br/>
+This indicates that whether a gadget is a Smartphone or not has a meaningful impact on the profit generated.</p>
 </div>
 </div>
 </div>
